@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Sudharshan Rao Allu">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8eef5"/>
+      <stop offset="0.55" stop-color="#faf9f7"/>
+      <stop offset="1" stop-color="#f0eeeb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0d47a1"/>
+      <stop offset="1" stop-color="#1565c0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="72" y="80" width="1056" height="470" rx="28" fill="#ffffff" opacity="0.9"/>
+  <rect x="120" y="140" width="10" height="350" rx="5" fill="url(#accent)"/>
+
+  <text x="170" y="220" font-size="54" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" fill="#1a1a1a">
+    Sudharshan Rao Allu
+  </text>
+  <text x="170" y="285" font-size="34" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="600" fill="#0d47a1">
+    ML &amp; Backend Engineer @ NYU
+  </text>
+  <text x="170" y="340" font-size="26" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="500" fill="#4a4a4a">
+    Python · ML pipelines · REST APIs · Docker/Kubernetes
+  </text>
+
+  <g transform="translate(170,395)">
+    <rect width="210" height="42" rx="21" fill="rgba(13,71,161,0.10)"/>
+    <text x="105" y="29" text-anchor="middle" font-size="18" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="700" fill="#0d47a1">
+      Open to Summer 2026
+    </text>
+  </g>
+
+  <text x="170" y="500" font-size="18" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="600" fill="#1a1a1a">
+    sudharshanraoallu.github.io
+  </text>
+</svg>

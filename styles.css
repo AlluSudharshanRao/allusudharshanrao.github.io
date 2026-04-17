@@ -30,6 +30,31 @@ body {
   background: var(--color-bg);
 }
 
+/* Keyboard accessibility */
+.skip-link {
+  position: absolute;
+  left: var(--space-lg);
+  top: var(--space-lg);
+  z-index: 1000;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--transition);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+:where(a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid rgba(13, 71, 161, 0.45);
+  outline-offset: 3px;
+}
+
 .site-header {
   position: sticky;
   top: 0;
