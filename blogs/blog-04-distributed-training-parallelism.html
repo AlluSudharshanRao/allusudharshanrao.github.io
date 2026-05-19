@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distributed training in plain terms | Sudharshan Rao Allu</title>
+  <meta name="description" content="Bulk synchronous training steps, data tensor pipeline and expert parallelism, and why synchronized rhythm shows up on the power meter.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-04-distributed-training-parallelism.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 4 · Distributed training · ~5 min read</p>
+        <h1>Distributed training in plain terms</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>Parts 1–3 focused on inference: phases on the GPU, how requests become facility load, and how to model serving power without smoothing away spikes. Training is a different beast—more synchronized, more repetitive, and often louder at the rack meter.</p>
+        <p>This post names the bulk-synchronous loop, the main parallelism strategies, and why that rhythm shows up as structured electrical load.</p>
+
+        <h2>The bulk synchronous loop</h2>
+        <p>Most frontier training jobs use bulk synchronous parallel (BSP) execution. Everyone advances in lockstep: compute together, synchronize together, then repeat. One training step is usually described as four phases.</p>
+
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>What happens</th><th>Typical power</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Forward</td><td>Activations flow through the model; loss is computed</td><td>High, compute bound</td></tr>
+            <tr><td>Backward</td><td>Gradients flow back through layers</td><td>High, compute bound</td></tr>
+            <tr><td>Synchronization</td><td>Gradients combined across workers (often all reduce)</td><td>Lower, communication bound</td></tr>
+            <tr><td>Update</td><td>Optimizer applies gradients; weights change</td><td>Moderate, memory heavy</td></tr>
+          </tbody>
+        </table>
+
+        <p>Forward and backward keep tensor cores near busy. Synchronization shifts work toward the network: collectives, waits for peers, less arithmetic per joule. The cluster breathes between a high compute plateau and a communication dip, step after step, for hundreds of thousands of iterations.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">One training step (BSP)</p>
+          <div class="blog-flow-h">
+            <div class="blog-flow-box">Forward<small>high power</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box">Backward<small>high power</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box">All-reduce<small>lower power</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box accent">Optimizer<small>update weights</small></div>
+          </div>
+          <figcaption>Everyone waits at the barrier; then the loop repeats.</figcaption>
+        </figure>
+
+        <h2>Worked example: eight GPUs, data parallel</h2>
+        <p>Imagine <strong>8 GPUs</strong> in one data-parallel group, each with a different micro-batch. They run forward and backward locally, then execute one <strong>all-reduce</strong> so every replica holds the same averaged gradient, then apply the optimizer. Wall-clock for the step is roughly:</p>
+        <p><em>t<sub>step</sub> ≈ t<sub>forward</sub> + t<sub>backward</sub> + t<sub>allreduce</sub> + t<sub>update</sub></em></p>
+        <p>If forward+backward take 400 ms and all-reduce takes 120 ms, communication is ~23% of the step—and during that 120 ms the fleet is synchronized in a communication-heavy, lower-power phase. Scale to 8,192 GPUs and the same pattern holds: the barrier still aligns everyone, which is why facility meters see rhythmic swings.</p>
+
+        <h2>Why the rhythm matters for power</h2>
+        <p>One GPU dipping during a collective is irrelevant to a substation. Ten thousand GPUs dipping together is not. Because BSP ties them to the same barrier, phase changes align. Facility load can move by tens of megawatts in seconds when the fleet leaves backward and enters all reduce, then snap back when compute resumes.</p>
+        <p>That is a different problem from total energy use. You can budget kilowatt hours and still be surprised by ramp rate, peak to mean ratio, and repetitive spectral content in the trace. Grid equipment and contracts care about those shapes.</p>
+        <p class="blog-note">Checkpointing adds a slower pulse on top of the per step rhythm: periodic saves that shift work toward storage and change the cluster profile for minutes. Same synchronized idea, lower frequency.</p>
+
+        <h2>Four ways to split the work</h2>
+        <p>No single strategy scales to trillion parameter class models alone. Real jobs combine dimensions. Think of them as answers to different bottlenecks.</p>
+
+        <h3>Data parallelism</h3>
+        <p>Each worker holds a full model copy. The dataset is sharded; each GPU sees different examples. After backward, gradients are averaged with all reduce so every replica stays identical. Synchronization happens once per step per data parallel group.</p>
+
+        <h3>Tensor parallelism</h3>
+        <p>Large layers are sliced across GPUs in the same node. Attention and MLP matrices are split; partial results are merged with collectives inside the layer. Bandwidth inside the node (NVLink on NVIDIA stacks) matters because communication happens every layer, not once per step.</p>
+
+        <h3>Pipeline parallelism</h3>
+        <p>The model is cut into stages on different devices. Microbatches flow forward through the pipeline; gradients flow back. Without careful scheduling, early and late stages sit idle waiting for the pipeline to fill, the pipeline bubble. Schedules that interleave forward and backward on different microbatches shrink the bubble but do not erase it. Power at stage boundaries reflects that uneven utilization.</p>
+
+        <h3>Expert parallelism</h3>
+        <p>For mixture-of-experts models, experts live on different GPUs. Tokens are routed to a subset of experts each step. That needs all-to-all style communication per MoE layer so tokens reach the right machines and results return. Load balancing losses keep a few experts from hoarding all traffic.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Parallelism dimensions (mental map)</p>
+          <svg viewBox="0 0 520 220" role="img" aria-label="Four boxes for DP TP PP EP parallelism">
+            <rect x="20" y="20" width="220" height="80" rx="6" fill="rgba(13,71,161,0.08)" stroke="rgba(13,71,161,0.3)"/>
+            <text x="130" y="48" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">Data parallel</text>
+            <text x="130" y="68" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">same model, different batches → all-reduce</text>
+            <rect x="280" y="20" width="220" height="80" rx="6" fill="rgba(13,71,161,0.08)" stroke="rgba(13,71,161,0.3)"/>
+            <text x="390" y="48" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">Tensor parallel</text>
+            <text x="390" y="68" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">split layers inside a node → NVLink</text>
+            <rect x="20" y="120" width="220" height="80" rx="6" fill="rgba(13,71,161,0.08)" stroke="rgba(13,71,161,0.3)"/>
+            <text x="130" y="148" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">Pipeline parallel</text>
+            <text x="130" y="168" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">stages across devices → microbatches</text>
+            <rect x="280" y="120" width="220" height="80" rx="6" fill="rgba(13,71,161,0.08)" stroke="rgba(13,71,161,0.3)"/>
+            <text x="390" y="148" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">Expert parallel</text>
+            <text x="390" y="168" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">MoE experts sharded → all-to-all</text>
+          </svg>
+          <figcaption>Real jobs mix these; each adds its own collectives and idle bubbles.</figcaption>
+        </figure>
+
+        <h2>Hybrid configs at scale</h2>
+        <p>Frontier runs multiply the dimensions. A compact mental model:</p>
+
+        <pre><code>Data parallel (DP)     replicas across groups
+Tensor parallel (TP)   split layers inside a node
+Pipeline parallel (PP) stages across nodes
+Expert parallel (EP)   experts for MoE layers
+
+Total GPUs ≈ DP × TP × PP × (EP when MoE)</code></pre>
+
+        <p>Each GPU may belong to several overlapping communication groups at once: all reduce for DP, in layer collectives for TP, point to point for PP, all to all for EP. Frameworks like Megatron style layouts exist precisely because managing those overlaps without leaving GPUs idle is hard.</p>
+
+        <h2>Can you train without sync?</h2>
+        <p>Asynchronous variants let workers use slightly stale gradients. They can help in some regimes but hurt convergence when batches are huge and consistency matters. Frontier quality training still defaults to synchronous steps, which means barriers and collectives are not optional decorations. They are the price of one shared model.</p>
+        <p>Engineering then shifts from “remove sync” to “live with the waveform”: overlap communication with compute where possible, shape transients at the rack, and model the facility trace honestly. The next posts in this series go deeper on all reduce and on what happens when the whole fleet swings together.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-03-modeling-inference-power-traces.html">Previous: Modeling inference power without hiding the spikes</a>
+        <a href="blog-05-all-reduce-gradient-exchange.html">Next: All-reduce and why training waits on the network</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

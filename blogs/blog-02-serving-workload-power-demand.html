@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From requests to facility load | Sudharshan Rao Allu</title>
+  <meta name="description" content="How LLM serving traffic becomes server, rack, and facility power—including PUE and what to measure.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-02-serving-workload-power-demand.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 2 · Power &amp; serving · ~4 min read</p>
+        <h1>From requests to facility load</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>The last post separated prefill, decode, and idle on a single GPU. This one steps back: a user request is also an electrical event once you have enough traffic. Software choices at the scheduler show up on the rack PDU and, after overhead, at the utility meter.</p>
+
+        <h2>Active requests beat raw RPS</h2>
+        <p>Requests per second (RPS) is easy to chart. It is also incomplete. What loads the machine is how many requests are <em>in flight</em> at once: past prefill, still holding KV cache, still decoding. Call that count A<sub>t</sub> at time t.</p>
+        <p>Two services at 100 RPS can have very different A<sub>t</sub>. Short prompts and short answers turn over quickly; long agentic jobs sit in decode for tens of seconds. Same arrival rate, very different occupancy, memory pressure, and watts.</p>
+        <p>The derivative matters too. A sharp rise in A<sub>t</sub> means many new prompts hit prefill together. That is when you see short, correlated power spikes. A sharp drop means many completions at once and a quick dip before the next wave.</p>
+
+        <div class="blog-note">
+          <p><strong>Example.</strong> Suppose average request lifetime is 20 seconds and RPS is 50. Rough steady-state occupancy is about 50 × 20 = 1000 active requests fleet-wide. Double output length without changing RPS and you roughly double A<sub>t</sub> and the time spent in decode-heavy power—not because arrivals increased, but because work stays open longer.</p>
+        </div>
+
+        <h2>The signal chain</h2>
+        <p>Think of serving as a chain of transformations, not a single multiplier from “users” to “megawatts”:</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Request → facility</p>
+          <div class="blog-flow-v">
+            <div class="blog-flow-box">User requests<small>rate, burstiness, prompt &amp; output length</small></div>
+            <div class="blog-flow-arrow">↓</div>
+            <div class="blog-flow-box">Scheduler<small>batching, queues, TTFT SLOs</small></div>
+            <div class="blog-flow-arrow">↓</div>
+            <div class="blog-flow-box">GPU phase mix<small>prefill · decode · idle · mixed</small></div>
+            <div class="blog-flow-arrow">↓</div>
+            <div class="blog-flow-box">Server power<small>per-GPU + host + NIC</small></div>
+            <div class="blog-flow-arrow">↓</div>
+            <div class="blog-flow-box">Rack / row<small>aggregation, correlation</small></div>
+            <div class="blog-flow-arrow">↓</div>
+            <div class="blog-flow-box accent">Facility load<small>IT × PUE at the PCC</small></div>
+          </div>
+          <figcaption>Each box reshapes the signal; optimizing one stage does not fix the rest.</figcaption>
+        </figure>
+
+        <p>Fixing one link does not fix the rest. A smooth arrival process can still produce spiky power if prefill aligns. Efficient GPUs can still produce swinging rack load if every server shares the same batch rhythm.</p>
+
+        <h2>What shapes the electrical signature</h2>
+        <table>
+          <thead>
+            <tr><th>Factor</th><th>Effect on power</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Prompt length</td><td>Longer prefill, higher peak watts, superlinear cost with context</td></tr>
+            <tr><td>Output length</td><td>Longer decode plateaus; dominates A<sub>t</sub> for chatty workloads</td></tr>
+            <tr><td>Batching policy</td><td>Higher utilization, more mixed phases, harder to predict from averages</td></tr>
+            <tr><td>Latency SLOs</td><td>Strict TTFT favors prefill; changes queueing and phase mix</td></tr>
+            <tr><td>Model type</td><td>Dense vs MoE changes per-token work and variance</td></tr>
+            <tr><td>Traffic bursts</td><td>Viral spikes, cron jobs, and quota resets align prefill across the fleet</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Scale: from GPU to campus</h2>
+        <p>Order-of-magnitude numbers help intuition (your hardware will differ):</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">IT load stacks up</p>
+          <svg viewBox="0 0 520 200" role="img" aria-label="Bar chart of illustrative power by infrastructure level">
+            <text x="8" y="18" font-family="Source Sans 3, sans-serif" font-size="10" fill="#4a4a4a">MW / kW</text>
+            <rect x="120" y="155" width="56" height="25" rx="3" fill="rgba(13,71,161,0.35)"/>
+            <text x="148" y="150" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">~0.7 kW</text>
+            <text x="148" y="188" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">GPU</text>
+            <rect x="200" y="120" width="56" height="60" rx="3" fill="rgba(13,71,161,0.5)"/>
+            <text x="228" y="115" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">~8 kW</text>
+            <text x="228" y="188" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">server</text>
+            <rect x="280" y="75" width="56" height="105" rx="3" fill="rgba(13,71,161,0.65)"/>
+            <text x="308" y="70" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">~100 kW</text>
+            <text x="308" y="188" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">rack</text>
+            <rect x="360" y="35" width="56" height="145" rx="3" fill="rgba(13,71,161,0.8)"/>
+            <text x="388" y="30" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">~1 MW</text>
+            <text x="388" y="188" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">row</text>
+            <rect x="440" y="8" width="56" height="172" rx="3" fill="#0d47a1"/>
+            <text x="468" y="4" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">10s MW</text>
+            <text x="468" y="188" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">site</text>
+            <line x1="110" y1="180" x2="510" y2="180" stroke="#e0ddd9"/>
+          </svg>
+          <figcaption>Illustrative only—PUE multiplies IT load before the grid sees it.</figcaption>
+        </figure>
+
+        <table>
+          <thead>
+            <tr><th>Level</th><th>Illustrative IT load</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>One H100-class GPU at high load</td><td>~700 W</td></tr>
+            <tr><td>8-GPU inference server</td><td>~6–10 kW</td></tr>
+            <tr><td>Rack of several such servers</td><td>~80–120 kW</td></tr>
+            <tr><td>Row of racks</td><td>~1–2 MW</td></tr>
+            <tr><td>Large AI site</td><td>10s–100s MW IT before PUE</td></tr>
+          </tbody>
+        </table>
+        <p>At each step, swings below either add (if synchronized) or partially cancel (if independent). Inference fleets often sit in the middle: not as lockstep as training, but correlated enough that traffic spikes matter.</p>
+
+        <h2>PUE: IT watts are not billable watts</h2>
+        <p><strong>Power Usage Effectiveness (PUE)</strong> is total facility power divided by IT equipment power. A site at 100 MW IT and PUE 1.3 presents about 130 MW to the grid. Planning from GPU averages alone systematically understates what utilities and breakers see.</p>
+        <p>PUE is not a constant. It moves with ambient temperature, cooling mode, and how fully loaded the IT is. A lightly loaded hall can look worse on PUE than a busy one because fixed cooling overhead is spread over fewer useful watts. That nonlinearity is why facility models need more than a single multiplier.</p>
+        <p>The <strong>point of common coupling (PCC)</strong> is where the datacenter meets the grid. Interconnection studies, tariffs, and ride-through design care about PCC demand, not dashboard GPU utilization.</p>
+
+        <h2>What to measure (before you model)</h2>
+        <p>The next post builds traces from workload features. In practice you anchor that with a few measurements:</p>
+        <ul>
+          <li><strong>GPU power.</strong> NVML or DCGM at 1–10 Hz (per GPU). Good for phase structure; know your driver sampling limits.</li>
+          <li><strong>Server inlet / PDU.</strong> Rack or node meters at similar or lower rate. Captures host, NIC, and multi-GPU sharing.</li>
+          <li><strong>Scheduler metrics.</strong> Active requests, queue depth, batch size, prefill vs decode time—aligned in time with power samples.</li>
+          <li><strong>Facility meters.</strong> Slower, but ground truth for aggregation and PUE checks.</li>
+        </ul>
+        <p>Align timestamps across layers. A spike in A<sub>t</sub> that lines up with a prefill-heavy interval on the power trace is worth more than either signal alone.</p>
+
+        <h2>Correlation across servers</h2>
+        <p>If each server’s power wobbles independently, fleet variance often shrinks with size. If they move together—same traffic spike, same model, same batching cadence—peaks add. Serving is usually between those extremes: partial correlation during viral or scheduled events, more independence across heterogeneous pools.</p>
+        <p>That is the bridge to modeling: you need traffic-shaped features (A<sub>t</sub>, ΔA<sub>t</sub>, occupancy, queue) and you need to know whether your fleet amplifies or damps them when you roll up to the PCC.</p>
+        <p>The next post walks through a pipeline that keeps spikes in the picture instead of averaging them away.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-01-llm-inference-prefill-decode.html">Previous: How LLM inference actually runs</a>
+        <a href="blog-03-modeling-inference-power-traces.html">Next: Modeling inference power</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

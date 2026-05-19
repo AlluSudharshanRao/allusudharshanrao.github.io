@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How LLM inference actually runs | Sudharshan Rao Allu</title>
+  <meta name="description" content="Prefill, decode, idle, and continuous batching in LLM serving.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-01-llm-inference-prefill-decode.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 1 · LLM serving · ~4 min read</p>
+        <h1>How LLM inference actually runs</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>People talk about an LLM server as if it is one steady job. It is not. A single request moves through distinct stages, and each stage stresses the GPU differently. If you care about latency, batching, or power, you need to know which stage you are in.</p>
+
+        <h2>Prefill: chew through the prompt</h2>
+        <p>When a prompt arrives, the model processes every input token at once. Embeddings, attention over the full context, layer after layer. Along the way it fills the <strong>key-value (KV) cache</strong>, the per-request store that decode will read from later.</p>
+        <p>Prefill is short and heavy. Matrix work is large, tensor cores stay busy, and power can sit near the chip’s rated limit. Long prompts hurt more than linearly because attention cost grows with sequence length squared, not just length.</p>
+
+        <h2>Decode: one token at a time</h2>
+        <p>After prefill, generation is autoregressive. Each step adds one token, reads the cache, runs a thin forward pass, samples or picks the next token, and repeats. Arithmetic intensity drops: you are not doing giant matmuls on the whole sequence anymore. You are mostly feeding weights and cache lines from HBM.</p>
+        <p>Decode often draws less peak power than prefill, but it can run for a long time on chatty or agentic outputs. A fifty-token reply is brief. A multi-thousand-token trace keeps the GPU in decode for minutes.</p>
+
+        <h2>Idle is not off</h2>
+        <p>Between requests the GPU is quiet, not dead. Memory stays allocated, runtimes stay warm, health checks still run. Power falls, but there is a floor you still pay for on always-on serving fleets, and bursty traffic makes the trace jump between idle and active all day.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Single request lifecycle</p>
+          <svg viewBox="0 0 640 100" role="img" aria-label="Timeline: idle, prefill burst, long decode, idle">
+            <text x="8" y="14" font-family="Source Sans 3, sans-serif" font-size="10" fill="#4a4a4a">power</text>
+            <line x1="48" y1="22" x2="620" y2="22" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="48" y1="52" x2="620" y2="52" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="48" y1="82" x2="620" y2="82" stroke="#e0ddd9" stroke-width="1"/>
+            <rect x="48" y="58" width="72" height="24" rx="3" fill="rgba(74,74,74,0.35)"/>
+            <rect x="120" y="28" width="56" height="54" rx="3" fill="rgba(13,71,161,0.8)"/>
+            <rect x="176" y="42" width="360" height="40" rx="3" fill="rgba(21,101,192,0.55)"/>
+            <rect x="536" y="58" width="84" height="24" rx="3" fill="rgba(74,74,74,0.35)"/>
+            <text x="84" y="74" font-family="Source Sans 3, sans-serif" font-size="9" fill="#fff" text-anchor="middle">idle</text>
+            <text x="148" y="58" font-family="Source Sans 3, sans-serif" font-size="9" fill="#fff" text-anchor="middle">prefill</text>
+            <text x="356" y="66" font-family="Source Sans 3, sans-serif" font-size="9" fill="#fff" text-anchor="middle">decode (one token per step)</text>
+            <text x="578" y="74" font-family="Source Sans 3, sans-serif" font-size="9" fill="#fff" text-anchor="middle">idle</text>
+            <text x="344" y="96" font-family="Source Sans 3, sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">time</text>
+          </svg>
+          <figcaption>One chat request: a short high-power prefill, then a longer lower-power decode tail.</figcaption>
+          <div class="blog-legend">
+            <span><i style="background:rgba(13,71,161,0.8)"></i> Prefill</span>
+            <span><i style="background:rgba(21,101,192,0.55)"></i> Decode</span>
+            <span><i style="background:rgba(74,74,74,0.35)"></i> Idle</span>
+          </div>
+        </figure>
+
+        <h2>Worked example</h2>
+        <p>Suppose a user sends a <strong>200-token</strong> prompt and the model returns <strong>400 tokens</strong>. Prefill might take on the order of tens to a few hundred milliseconds on a modern GPU (model and batching dependent). Decode runs 400 forward passes—one per output token—so it often dominates wall-clock time even though each decode step is cheaper than prefill.</p>
+        <p>Latency-wise, <strong>time-to-first-token (TTFT)</strong> is almost entirely prefill. <strong>Time-per-output-token</strong> reflects decode. Tuning batch size helps throughput; it does not turn decode into prefill. Power-wise, you may see a sharp prefill spike followed by a long plateau near moderate draw—a shape the rest of this series builds on.</p>
+
+        <h2>How the two phases compare</h2>
+        <table>
+          <thead>
+            <tr><th></th><th>Prefill</th><th>Decode</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Work per step</td><td>All prompt tokens in parallel</td><td>One new token</td></tr>
+            <tr><td>Typical duration</td><td>Short burst</td><td>Long tail</td></tr>
+            <tr><td>Main limit</td><td>Compute</td><td>Memory bandwidth</td></tr>
+            <tr><td>KV cache</td><td>Written</td><td>Read each step</td></tr>
+            <tr><td>Power</td><td>High spike</td><td>Moderate, sustained</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Continuous batching blurs the lines</h2>
+        <p>Naive serving finishes request A, then starts B. Production systems use continuous batching: new prompts can join while others are still decoding. The scheduler slips prefill into the same iteration as ongoing decode work.</p>
+        <p>Throughput goes up. Utilization improves. The clean picture of “prefill, then decode, then idle” stops matching reality. At any instant one GPU might be decoding for two chats and prefilling a third. Power sits between the pure phases and shifts as the mix changes.</p>
+        <p>That mix also tightens memory. Every in-flight request owns KV cache space that grows with each generated token. Frameworks like vLLM use <strong>PagedAttention</strong> so HBM does not fragment as requests come and go. Without that, concurrency caps bite fast.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Continuous batching (three requests)</p>
+          <svg viewBox="0 0 640 130" role="img" aria-label="Three request rows showing overlapping prefill and decode">
+            <text x="100" y="16" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">time →</text>
+            <text x="4" y="42" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">Req 1</text>
+            <rect x="100" y="28" width="50" height="18" rx="2" fill="rgba(13,71,161,0.8)"/>
+            <rect x="150" y="28" width="200" height="18" rx="2" fill="rgba(21,101,192,0.55)"/>
+            <text x="4" y="72" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">Req 2</text>
+            <rect x="180" y="58" width="50" height="18" rx="2" fill="rgba(13,71,161,0.8)"/>
+            <rect x="230" y="58" width="160" height="18" rx="2" fill="rgba(21,101,192,0.55)"/>
+            <text x="4" y="102" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">Req 3</text>
+            <rect x="260" y="88" width="50" height="18" rx="2" fill="rgba(13,71,161,0.8)"/>
+            <rect x="310" y="88" width="120" height="18" rx="2" fill="rgba(21,101,192,0.55)"/>
+            <text x="480" y="115" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" font-style="italic">GPU: mixed phase at once</text>
+          </svg>
+          <figcaption>New prompts join while others decode—the GPU rarely sits in one pure phase.</figcaption>
+        </figure>
+
+        <h2>Dense models vs mixture of experts</h2>
+        <p>Dense models touch essentially all parameters every token. MoE models route each token through a small subset of experts. Total parameter count can be huge while per token compute is lower, but routing and load balance add their own mess. Prefill vs decode still exists; the numbers just differ, and power models trained only on dense stacks will miss MoE behavior.</p>
+
+        <h2>Why this matters outside the GPU</h2>
+        <p>Time to first token is mostly prefill. Time per output token is mostly decode. You cannot fix one by tuning the other.</p>
+        <p>Power planning sees the same split. A fleet of long prompt traffic holds chips high longer. Light traffic oscillates between spikes and idle. Capacity, routing, and scale out rules all depend on which phase dominates your workload.</p>
+        <p>Next: how those phases roll up from requests to rack and facility load, including what to meter before you model.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <span></span>
+        <a href="blog-02-serving-workload-power-demand.html">Next: From requests to facility load</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

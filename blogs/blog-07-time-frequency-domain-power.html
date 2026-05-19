@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading datacenter power in time and frequency | Sudharshan Rao Allu</title>
+  <meta name="description" content="Time domain ramps and peaks, frequency domain FFT views, and why both matter for AI datacenter grid planning.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-07-time-frequency-domain-power.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 7 · Datacenter power · ~6 min read</p>
+        <h1>Reading datacenter power in time and frequency</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>The last post showed why a training cluster can swing tens of megawatts in lockstep. That picture lives on a chart: power versus time. Useful, but incomplete. The same trace, seen through a frequency transform, tells you which rhythms are loud and whether any of them sit in bands the grid cares about. Operators and planners need both readings.</p>
+
+        <h2>Two questions, two views</h2>
+        <p>Every meter trace is one signal. You can ask about it in two ways.</p>
+        <p>In the <strong>time domain</strong>, you watch watts move second by second. How big was the last peak? How fast did load climb after the all reduce pause? When did the checkpoint dip start?</p>
+        <p>In the <strong>frequency domain</strong>, you ask which oscillations are present and how strong each one is. A training job that repeats every ten seconds leaves energy near 0.1 Hz. Harmonics show up if the waveform has sharp corners. Low, slow dips from checkpointing sit far left on the spectrum.</p>
+
+        <table>
+          <thead>
+            <tr><th>View</th><th>Good for answering</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Time</td><td>Peak demand, ramp speed, step size, duration of dips</td></tr>
+            <tr><td>Frequency</td><td>Dominant periods, harmonic content, overlap with sensitive grid bands</td></tr>
+          </tbody>
+        </table>
+
+        <h2>What the time domain shows</h2>
+        <p>This is the view most people open first. It matches intuition: the line goes up when compute starts, down when the cluster talks, up again on the next forward pass.</p>
+
+        <figure style="margin:1.5em 0;padding:1rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);">
+          <svg viewBox="0 0 700 140" width="100%" height="auto" role="img" aria-label="Illustrative training cluster power trace over time with compute peaks, communication troughs, and a checkpoint dip">
+            <line x1="50" y1="20" x2="680" y2="20" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="50" y1="50" x2="680" y2="50" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="50" y1="80" x2="680" y2="80" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="50" y1="110" x2="680" y2="110" stroke="#e0ddd9" stroke-width="1"/>
+            <line x1="50" y1="65" x2="680" y2="65" stroke="#0d47a1" stroke-width="1" stroke-dasharray="4,4" opacity="0.6"/>
+            <polyline fill="none" stroke="#0d47a1" stroke-width="2.5" stroke-linejoin="round"
+              points="50,105 70,105 85,28 155,28 170,78 215,78 230,28 300,28 315,78 355,78 370,28 440,28 455,115 470,115 485,28 555,28 570,78 620,78 635,28 680,28"/>
+            <text x="85" y="18" font-family="Source Sans 3,sans-serif" font-size="10" fill="#b45309" text-anchor="middle">peak</text>
+            <text x="462" y="128" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">checkpoint dip</text>
+            <text x="72" y="72" font-family="Source Sans 3,sans-serif" font-size="9" fill="#1565c0">ramp</text>
+            <text x="365" y="135" font-family="Source Sans 3,sans-serif" font-size="11" fill="#4a4a4a" text-anchor="middle">time</text>
+            <text x="18" y="72" font-family="Source Sans 3,sans-serif" font-size="11" fill="#4a4a4a" text-anchor="middle" transform="rotate(-90,18,72)">power</text>
+          </svg>
+          <figcaption style="font-size:0.9rem;color:var(--color-text-muted);margin-top:0.75em;">Illustrative trace: iteration swings plus a slower checkpoint trough.</figcaption>
+        </figure>
+
+        <p>From that shape you pull numbers that drive capex and protection settings.</p>
+        <ul>
+          <li><strong>Peaks.</strong> What is the highest load the service entrance must survive? Peaks set breaker ratings, transformer headroom, and cooling peaks. Averages hide the spike that trips a limit.</li>
+          <li><strong>Ramp rate.</strong> How many megawatts per second does load change at phase boundaries? Equipment can tolerate a high ceiling if it arrives slowly. The same ceiling with a two second ramp can stress UPS, AVR, and upstream generation.</li>
+          <li><strong>Steps and transients.</strong> Abrupt jumps at the start of compute after communication show up as voltage flicker risk locally, even when the absolute megawatt number is within contract.</li>
+          <li><strong>Peak to mean ratio.</strong> If peaks sit fifty percent above average, you provision for the peaks or accept clipping. Either choice has cost.</li>
+        </ul>
+
+        <p>Inference fleets answer the same questions with different texture: prefill spikes, decode plateaus, idle floors, and batching that blends phases. The tools are unchanged; only the trace shape differs.</p>
+
+        <h2>What the frequency domain adds</h2>
+        <p>A waveform that “looks fine” in time can still concentrate energy at an awkward frequency. That is where the <strong>fast Fourier transform</strong> (FFT) helps. It splits the trace into sine waves at different rates and reports how much power each rate carries.</p>
+
+        <div class="blog-note">
+          <p><strong>Piano chord analogy.</strong> You hear one blended sound in the room. A spectrum analyzer shows separate notes, each with its own volume. The FFT does that for megawatts: one wobbly line in time becomes a set of frequencies, some harmless and some worth a closer look next to local grid dynamics.</p>
+        </div>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Spectrum sketch (training cluster)</p>
+          <svg viewBox="0 0 480 150" role="img" aria-label="Bar chart of spectral energy by frequency band">
+            <line x1="40" y1="120" x2="450" y2="120" stroke="#e0ddd9"/>
+            <rect x="55" y="85" width="50" height="35" rx="2" fill="rgba(74,74,74,0.35)"/>
+            <text x="80" y="132" font-family="Source Sans 3, sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">0.01 Hz</text>
+            <rect x="130" y="25" width="70" height="95" rx="2" fill="rgba(13,71,161,0.85)"/>
+            <text x="165" y="132" font-family="Source Sans 3, sans-serif" font-size="8" fill="#b45309" text-anchor="middle">0.1 Hz peak</text>
+            <rect x="220" y="45" width="40" height="75" rx="2" fill="rgba(13,71,161,0.5)"/>
+            <rect x="270" y="60" width="35" height="60" rx="2" fill="rgba(13,71,161,0.35)"/>
+            <text x="262" y="132" font-family="Source Sans 3, sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">harmonics</text>
+            <rect x="330" y="75" width="90" height="45" rx="2" fill="rgba(21,101,192,0.4)"/>
+            <text x="375" y="132" font-family="Source Sans 3, sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">flicker band</text>
+            <text x="8" y="70" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" transform="rotate(-90,8,70)">energy</text>
+            <text x="250" y="14" font-family="Source Sans 3, sans-serif" font-size="9" fill="#b45309" text-anchor="middle">fundamental ≈ 1 / iteration time</text>
+          </svg>
+          <figcaption>FFT turns the time trace into peaks at the iteration rate and its harmonics.</figcaption>
+        </figure>
+
+        <p>For a synchronized training cluster you usually see:</p>
+        <ul>
+          <li>A <strong>fundamental</strong> near the iteration rate (for example 0.1 Hz when a step takes ten seconds).</li>
+          <li><strong>Harmonics</strong> at multiples of that rate, from blocky compute phases and sharp ramps.</li>
+          <li><strong>Very low frequency</strong> energy from checkpoint cadence and job scheduling.</li>
+          <li>A <strong>noise floor</strong> from mixed workloads, pipeline bubbles, or inference traffic superimposed on training.</li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr><th>Band (approximate)</th><th>Typical source in AI sites</th><th>Why planners care</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Below 0.01 Hz</td><td>Checkpoints, diurnal traffic, maintenance</td><td>Energy storage duration, slow load following</td></tr>
+            <tr><td>0.05 to 2 Hz</td><td>Training iteration rhythm, large synchronized swings</td><td>Overlap with sub synchronous and electromechanical modes on weak ties</td></tr>
+            <tr><td>1 to 35 Hz</td><td>Finer structure, some harmonics, local flicker studies</td><td>Voltage flicker limits in interconnection studies</td></tr>
+            <tr><td>Higher</td><td>Power electronics, facility harmonics</td><td>Separate from workload rhythm; still part of site design</td></tr>
+          </tbody>
+        </table>
+
+        <p>Exact “sensitive” bands depend on the local network: generator inertia, series compensation, nearby industrial loads. The point for AI sites is not to memorize one universal danger frequency. It is to <em>measure</em> where your job puts energy and compare that map to what the utility or study flags for your point of interconnection.</p>
+
+        <h2>Why neither view is enough alone</h2>
+        <p>Time and frequency are the same data, different summaries. You can pass a time domain check and fail a spectral one, or the reverse.</p>
+        <ul>
+          <li>Moderate peaks with most energy parked at 0.15 Hz may be worse for a given grid than higher peaks spread across many frequencies.</li>
+          <li>A flat looking average can mask a sharp once per minute ramp that matters for ramp rate limits.</li>
+          <li>Short monitoring windows miss slow drift; long windows smear transient peaks. Sampling and window length are part of the analysis, not afterthoughts.</li>
+        </ul>
+        <p>Characterization studies should report both: peak and ramp metrics from the trace, plus a spectrum (or spectrogram if the job changes over hours).</p>
+
+        <h2>Iteration length is a frequency knob</h2>
+        <p>Iteration time sets the main tone of the load. Ten second steps imply about 0.1 Hz. Five second steps double that. Twenty second steps halve it. Model size, batching, and network collectives all move that dial.</p>
+        <p>That is a software lever on electrical behavior. Shifting iteration period does not remove oscillation, but it can move spectral peaks away from a band your interconnection study marked as awkward. It is co design: throughput and stability trade against each other, and sharper phase transitions add harmonics even when the fundamental moves.</p>
+
+        <h2>Planning and operations implications</h2>
+        <p>Facility and grid planning usually starts with nameplate and average demand. For large AI training loads, add a short checklist grounded in both domains.</p>
+        <table>
+          <thead>
+            <tr><th>Decision</th><th>Time domain input</th><th>Frequency domain input</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Service entrance and PDU sizing</td><td>Peak MW, peak to mean</td><td>Less central; peaks dominate</td></tr>
+            <tr><td>UPS and ride through</td><td>Ramp rate, step size</td><td>Dominant swing period sets how fast storage must respond</td></tr>
+            <tr><td>Utility interconnection study</td><td>Maximum demand, ramp schedules</td><td>Spectral energy in study bands, harmonic content</td></tr>
+            <tr><td>On site monitoring alarms</td><td>MW/s limits, peak caps</td><td>Energy entering agreed frequency windows during steady training</td></tr>
+            <tr><td>Workload changes</td><td>Before and after peaks and ramps</td><td>Did the fundamental shift when batch or model changed?</td></tr>
+          </tbody>
+        </table>
+
+        <p>Telemetry should keep a time series for operators and periodic FFT or short window spectra for planners. When a new model lands, rerun both: the cluster can be “within megawatt cap” while quietly sliding a peak into a sensitive band.</p>
+
+        <div class="blog-note">
+          <p><strong>Practical takeaway.</strong> Synchronized swings explain <em>why</em> the line wiggles. Time domain reading tells you how hard and how fast. Frequency domain reading tells you which wiggles repeat and whether they rhyme with the grid. Infrastructure that only averages watts or only stares at peaks will miss the coupling this workload creates. Both views belong in design reviews, interconnection packages, and runbooks.</p>
+        </div>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-06-synchronized-gpu-power-swings.html">Previous: Synchronized GPU power swings</a>
+        <span></span>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

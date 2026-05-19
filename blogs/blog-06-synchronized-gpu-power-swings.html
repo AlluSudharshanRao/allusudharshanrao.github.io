@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why thousands of GPUs swing power together | Sudharshan Rao Allu</title>
+  <meta name="description" content="Per GPU training phases, correlation at scale, facility oscillation, and grid implications.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-06-synchronized-gpu-power-swings.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 6 · Power at scale · ~4 min read</p>
+        <h1>Why thousands of GPUs swing power together</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>A single GPU breathing between compute and communication is boring electrically. Ten thousand GPUs doing the same thing on the same clock is not. Large training clusters stop looking like steady loads and start looking like oscillating machines. This post is about that step up in scale.</p>
+
+        <h2>Phases on one GPU</h2>
+        <p>Each training iteration on one device moves through recognizable phases. Forward pass: dense matmuls, tensor cores busy, power near thermal design power. Backward pass: similar intensity, often slightly higher memory traffic. Collective communication: all reduce and friends, arithmetic units quiet, DMA and links active, power falls. Optimizer step: memory bound updates, moderate draw.</p>
+        <p>Plot power for one card and you get a lumpy square wave: high, high, lower, moderate, repeat. The period is the iteration time, maybe a few seconds for a large language model job. Nobody at the utility cares about one 500 watt ripple.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">One GPU, one iteration</p>
+          <svg viewBox="0 0 560 110" role="img" aria-label="Power waveform for forward, backward, communication, optimizer">
+            <line x1="40" y1="15" x2="540" y2="15" stroke="#e0ddd9"/>
+            <line x1="40" y1="45" x2="540" y2="45" stroke="#e0ddd9"/>
+            <line x1="40" y1="75" x2="540" y2="75" stroke="#e0ddd9"/>
+            <polyline fill="none" stroke="#0d47a1" stroke-width="2.5" stroke-linejoin="round"
+              points="40,78 70,78 85,18 200,18 215,48 280,48 295,18 410,18 425,58 490,58 505,78 540,78"/>
+            <polygon fill="rgba(13,71,161,0.1)" points="40,95 40,78 70,78 85,18 200,18 215,48 280,48 295,18 410,18 425,58 490,58 505,78 540,78 540,95"/>
+            <text x="142" y="12" font-family="Source Sans 3, sans-serif" font-size="8" fill="#0d47a1" text-anchor="middle">FWD</text>
+            <text x="247" y="42" font-family="Source Sans 3, sans-serif" font-size="8" fill="#1565c0" text-anchor="middle">COMM</text>
+            <text x="352" y="12" font-family="Source Sans 3, sans-serif" font-size="8" fill="#0d47a1" text-anchor="middle">BWD</text>
+            <text x="457" y="52" font-family="Source Sans 3, sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">OPT</text>
+            <text x="290" y="105" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">time</text>
+            <text x="12" y="50" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" transform="rotate(-90,12,50)">W</text>
+          </svg>
+          <figcaption>Same shape on every GPU in a synchronous job—so swings add at fleet scale.</figcaption>
+        </figure>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Independent vs synchronized fleet</p>
+          <svg viewBox="0 0 480 100" role="img" aria-label="Comparison of smooth aggregate vs spiky aggregate power">
+            <text x="8" y="14" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">facility power</text>
+            <text x="120" y="28" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">independent phases</text>
+            <path d="M 40 55 Q 80 50 120 55 T 200 52 T 280 56" fill="none" stroke="#94a3b8" stroke-width="2"/>
+            <text x="360" y="28" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">synchronized (BSP)</text>
+            <polyline fill="none" stroke="#0d47a1" stroke-width="2.5" points="300,70 330,25 370,70 410,25 450,70"/>
+          </svg>
+          <figcaption>Lockstep training preserves the ripple at megawatt scale instead of averaging it away.</figcaption>
+        </figure>
+
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>What the silicon does</th><th>Typical power</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Forward</td><td>Dense math on activations</td><td>Near TDP</td></tr>
+            <tr><td>Backward</td><td>Gradient matmuls</td><td>Near TDP</td></tr>
+            <tr><td>Collectives</td><td>Network and memory copies</td><td>Below compute peak</td></tr>
+            <tr><td>Optimizer</td><td>Weight and state updates</td><td>Moderate</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Correlation amplification</h2>
+        <p>Independent random fluctuations average out. If ten thousand GPUs each wobbled on their own schedule, facility power would look smooth compared to any one device. The standard deviation of the sum grows like the square root of N, not like N.</p>
+        <p>Distributed training is deliberately not independent. Bulk synchronous execution forces alignment: everyone finishes forward, everyone finishes backward, everyone enters all reduce together, everyone updates weights together. The software stack is built to keep replicas in phase because gradient based training requires it.</p>
+        <p>Correlated fluctuations add. A 200 watt dip on one GPU becomes a 2 megawatt dip at ten thousand similar GPUs if they dip together. A 300 watt rise on the next phase becomes a 3 megawatt rise. The relative swing does not shrink with scale; it multiplies.</p>
+        <p>Overlap between backward and communication blurs the edges on each device but does not break the shared clock. Stragglers are minimized; barriers still exist at bucket boundaries and at the optimizer. The fleet still moves as a flock.</p>
+
+        <h2>What the facility sees</h2>
+        <p>Rack PDUs and hall meters integrate thousands of cards. They see iteration frequency as a repeating ripple on top of mean load. A ten second iteration is a 0.1 hertz oscillation. Faster jobs land higher; slow jobs lower. Checkpointing adds a slower, deeper dip when the whole job pauses compute to flush state to storage.</p>
+        <p>Peak to mean ratio matters for provisioning. Ramp rate matters for equipment that cannot follow step changes instantly. A cluster that jumps several megawatts in a few seconds stresses transformers, UPS systems, and bus work in ways a flat average load chart never shows.</p>
+        <p>Cooling lags power. CRAC and liquid loops respond on seconds to minutes. A sharp electrical dip does not instantly shrink heat already in the room. Operations teams care about both the electrical swing and the thermal tail.</p>
+
+        <h2>Grid implications</h2>
+        <p>At campus or regional scale, a 50 to 100 megawatt training site is a major industrial customer. If a double digit fraction of that load oscillates at 0.05 to 2 hertz because of training rhythm, grid planners hear about it. Average megawatt hours were never the whole story.</p>
+        <p>Some grid elements are sensitive to load cycling in those bands. Inertial response, voltage regulation, and protection settings written for steel mills or steady datacenters may not have been tuned for software locked oscillation. The next post in this series looks at time and frequency views of the same waveform; the point here is that the load is structured, not noise.</p>
+        <p>Operators care about ramp direction too. Fast ramp up can sag voltage. Fast ramp down can briefly leave generation ahead of load on weak or islanded segments. Symmetric risk is rare in textbook load profiles; training clusters are asymmetric at phase boundaries.</p>
+        <p>Mitigations exist but they trade against training goals. Staggered checkpointing smooths one dip but complicates fault tolerance. Asynchronous methods reduce lockstep but hurt convergence at large batch scale. Power caps and clock throttling flatten swings but cost throughput. Most frontier jobs accept the oscillation and engineer around it in the facility layer instead of destroying the training schedule.</p>
+
+        <h2>Why this is structural</h2>
+        <p>The swing is not a bug in NCCL or a bad batch size. It follows from synchronous optimization at scale. You could flatten power by running GPUs out of phase, but then you are not running one replicated model in the usual sense.</p>
+        <p>Inference fleets can look messier: requests arrive at random times, continuous batching mixes phases. Training at thousands of GPUs is the opposite: one job, one barrier, one heartbeat. That heartbeat is visible on the meter.</p>
+        <p>Understanding the per GPU phases and the collective barriers explains where the troughs come from. Understanding correlation explains why those troughs become infrastructure events. The series continues with how to read that signal in time and in frequency, and what to do about it on the grid side.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-05-all-reduce-gradient-exchange.html">Previous: All-reduce and why training waits on the network</a>
+        <a href="blog-07-time-frequency-domain-power.html">Next: Reading datacenter power in time and frequency</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

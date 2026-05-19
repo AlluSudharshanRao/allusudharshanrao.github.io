@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogs | Sudharshan Rao Allu</title>
-  <meta name="description" content="Blog posts and technical writing. Sudharshan Rao Allu.">
+  <meta name="description" content="Notes on LLM serving, distributed training, and datacenter power. Sudharshan Rao Allu.">
   <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Blogs | Sudharshan Rao Allu">
-  <meta property="og:description" content="Blog posts and technical writing.">
+  <meta property="og:description" content="Notes on LLM serving, distributed training, and datacenter power.">
   <meta property="og:url" content="https://sudharshanraoallu.github.io/blogs.html">
   <meta property="og:image" content="https://sudharshanraoallu.github.io/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blogs | Sudharshan Rao Allu">
-  <meta name="twitter:description" content="Blog posts and technical writing.">
+  <meta name="twitter:description" content="Notes on LLM serving, distributed training, and datacenter power.">
   <meta name="twitter:image" content="https://sudharshanraoallu.github.io/og-image.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,13 +45,50 @@
     <section class="section page-head">
       <div class="container">
         <h1 class="page-title">Blogs</h1>
-        <p class="section-intro">Technical writing and notes.</p>
+        <p class="section-intro">Notes on how LLM systems run, train, and draw power.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container container-narrow">
-        <p class="section-intro">No posts yet. Check back soon.</p>
+        <p class="blog-series-note">A seven-part series I wrote while studying ML systems at NYU—connecting serving behavior, measurement, and datacenter scale. Read in order if you like, or jump to what you need.</p>
+        <div class="blog-list">
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-01-llm-inference-prefill-decode.html">How LLM inference actually runs</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 1 · ~4 min</p>
+            <p class="description">Prefill, decode, idle, and why continuous batching stops looking like three clean phases.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-02-serving-workload-power-demand.html">From requests to facility load</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 2 · ~4 min</p>
+            <p class="description">Active requests, PUE, the signal chain from scheduler to the grid, and what to meter.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-03-modeling-inference-power-traces.html">Modeling inference power without hiding the spikes</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 3 · ~6 min</p>
+            <p class="description">GMM states, BiGRU labels, per-server traces, and facility aggregation.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-04-distributed-training-parallelism.html">Distributed training in plain terms</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 4 · ~5 min</p>
+            <p class="description">Bulk-synchronous steps and data, tensor, pipeline, and expert parallelism.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-05-all-reduce-gradient-exchange.html">All-reduce and why training waits on the network</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 5 · ~6 min</p>
+            <p class="description">Gradient sync, ring vs tree collectives, overlap, and power during communication.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-06-synchronized-gpu-power-swings.html">Why thousands of GPUs swing power together</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 6 · ~4 min</p>
+            <p class="description">One GPU’s square wave becomes a facility-level oscillation when every worker shares a clock.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-07-time-frequency-domain-power.html">Reading datacenter power in time and frequency</a></h3>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 7 · ~6 min</p>
+            <p class="description">What a waveform shows, what an FFT adds, and why both views matter for grid planning.</p>
+          </article>
+        </div>
       </div>
     </section>
   </main>

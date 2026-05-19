@@ -13,6 +13,27 @@
     <loc>https://sudharshanraoallu.github.io/blogs.html</loc>
   </url>
   <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-01-llm-inference-prefill-decode.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-02-serving-workload-power-demand.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-03-modeling-inference-power-traces.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-04-distributed-training-parallelism.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-05-all-reduce-gradient-exchange.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-06-synchronized-gpu-power-swings.html</loc>
+  </url>
+  <url>
+    <loc>https://sudharshanraoallu.github.io/blogs/blog-07-time-frequency-domain-power.html</loc>
+  </url>
+  <url>
     <loc>https://sudharshanraoallu.github.io/experience.html</loc>
   </url>
   <url>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All reduce and why training waits on the network | Sudharshan Rao Allu</title>
+  <meta name="description" content="Gradient sync, all reduce variants, overlap with backward, and power during communication vs compute.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-05-all-reduce-gradient-exchange.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 5 · Distributed training · ~6 min read</p>
+        <h1>All-reduce and why training waits on the network</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>The last post described how thousands of GPUs march through forward, backward, sync, and update in lockstep. The sync step is not a detail. It is often where the cluster spends its wall-clock time and where power dips. That step is built from collective communication, and the workhorse collective for data-parallel training is <strong>all-reduce</strong>.</p>
+
+        <h2>The gradient sync problem</h2>
+        <p>In data parallel training, every GPU holds a full copy of the model. The dataset is split: GPU 0 sees batch A, GPU 1 sees batch B, and so on. Each device runs forward and backward on its own shard. The gradients they compute are correct for their shard, but they are not the gradients of the full dataset.</p>
+        <p>To take one honest optimizer step, the cluster must agree on a single gradient vector (or an average of local gradients that matches that vector). Every worker must apply the same update. Otherwise replicas drift apart and you are no longer training one model.</p>
+        <p>That agreement is the gradient synchronization problem. You have N tensors of the same shape, one per GPU, and you need the elementwise sum (or mean) visible on all N devices before anyone touches weights. At billion parameter scale, that tensor is enormous and must cross NVLink within a node and InfiniBand across nodes.</p>
+
+        <h2>What all reduce does</h2>
+        <p>All reduce is a collective operation. Each of N participants contributes a buffer. The group applies a reduction (usually sum) and returns the combined result to every participant. No single GPU is the “master” that alone holds the answer; everyone ends with the same final array.</p>
+        <p>For training, the buffers are gradients (or gradient buckets). After all reduce, each GPU has the global gradient and can run the optimizer identically. Frameworks hide this behind calls like distributed data parallel, but underneath it is still reduce, scatter, gather, or all reduce patterns scheduled by libraries such as NCCL.</p>
+
+        <h2>Ring, tree, and hierarchical variants</h2>
+        <p>Implementations differ in how they move bytes and how many steps they take. The choice matters for latency, link utilization, and how long GPUs sit in a communication heavy phase.</p>
+
+        <h3>Ring all reduce</h3>
+        <p>Workers are arranged in a logical ring. The algorithm runs in two phases. Reduce scatter walks chunks around the ring so each GPU ends up owning one fully reduced slice of the tensor. All gather then circulates those slices until every GPU has the full reduced tensor.</p>
+        <p>Ring all-reduce is bandwidth efficient: each link carries roughly twice the tensor size divided by N worth of traffic, and utilization improves as N grows. It is the default mental model for large data-parallel jobs on homogeneous fabrics.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Ring all-reduce (4 GPUs)</p>
+          <svg viewBox="0 0 320 200" role="img" aria-label="Four GPUs connected in a ring with arrows">
+            <circle cx="160" cy="40" r="28" fill="rgba(13,71,161,0.15)" stroke="#0d47a1" stroke-width="2"/>
+            <text x="160" y="45" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">GPU 0</text>
+            <circle cx="260" cy="100" r="28" fill="rgba(13,71,161,0.15)" stroke="#0d47a1" stroke-width="2"/>
+            <text x="260" y="105" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">GPU 1</text>
+            <circle cx="160" cy="160" r="28" fill="rgba(13,71,161,0.15)" stroke="#0d47a1" stroke-width="2"/>
+            <text x="160" y="165" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">GPU 2</text>
+            <circle cx="60" cy="100" r="28" fill="rgba(13,71,161,0.15)" stroke="#0d47a1" stroke-width="2"/>
+            <text x="60" y="105" font-family="Source Sans 3, sans-serif" font-size="11" font-weight="600" fill="#0d47a1" text-anchor="middle">GPU 3</text>
+            <path d="M 182 52 L 238 78" stroke="#1565c0" stroke-width="2" marker-end="url(#arr)"/>
+            <path d="M 252 122 L 182 148" stroke="#1565c0" stroke-width="2" marker-end="url(#arr)"/>
+            <path d="M 138 148 L 78 122" stroke="#1565c0" stroke-width="2" marker-end="url(#arr)"/>
+            <path d="M 72 78 L 138 52" stroke="#1565c0" stroke-width="2" marker-end="url(#arr)"/>
+            <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1565c0"/></marker></defs>
+            <text x="160" y="192" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">reduce-scatter → all-gather</text>
+          </svg>
+          <figcaption>Chunks circulate around the ring in two phases until every GPU holds the full reduced gradient.</figcaption>
+        </figure>
+
+        <h3>Tree all-reduce</h3>
+        <p>Tree reduction sums gradients up a binary tree, then broadcasts the result down. Step count scales like log N instead of linear in ring steps, which helps when messages are small and latency dominates. Large gradient tensors on modern LLMs are usually bandwidth bound, so pure tree is less common alone, but it appears inside hybrid schemes and for small tensors.</p>
+
+        <h3>Hierarchical all reduce</h3>
+        <p>Real clusters are not flat. Inside a server, NVLink offers very high GPU to GPU bandwidth. Between servers, NIC links are slower. Hierarchical all reduce respects that: reduce within the node on fast links, reduce across nodes on the fabric, then gather within nodes again. Less bits cross the expensive links, which shortens the collective and shrinks how long the fleet waits with tensor cores relatively idle.</p>
+
+        <table>
+          <thead>
+            <tr><th>Variant</th><th>Strength</th><th>Typical use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ring</td><td>Bandwidth optimal for large tensors</td><td>Default for big gradient all reduces</td></tr>
+            <tr><td>Tree</td><td>Low latency for small messages</td><td>Small buffers, or stages in a hierarchy</td></tr>
+            <tr><td>Hierarchical</td><td>Matches node vs rack topology</td><td>Multi node training at scale</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Why training still waits</h2>
+        <p>Even an optimal algorithm faces hard limits. Gradient size grows with model size. A single full model all reduce can move terabytes per step if you are not sharding cleverly. All reduce is also a barrier: the collective cannot start until the slowest GPU finishes the backward pass for the tensors in that bucket, and the optimizer cannot run until the collective finishes.</p>
+        <p>Tensor parallel and pipeline parallel training add more collectives (all gather, reduce scatter, point to point activations). ZeRO style sharding changes what is replicated and what is communicated, but it does not remove the need to move data. It redistributes memory pressure into different communication patterns.</p>
+        <p>So when people say training is compute bound or communication bound, they mean iteration time is limited by matmul throughput or by how fast the fabric can finish these collectives. At frontier scale, both bite, and the communication slice is what forces synchronized, mostly idle GPUs.</p>
+
+        <h2>Overlap with backward</h2>
+        <p>Waiting until the entire backward pass ends before starting any communication would waste time. Production stacks bucket gradients: group layers into chunks of roughly tens of megabytes. As soon as a bucket’s gradients are ready, launch all-reduce for that bucket while deeper layers still compute.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Gradient buckets overlap backward</p>
+          <svg viewBox="0 0 560 90" role="img" aria-label="Timeline showing backward compute and overlapping all-reduce segments">
+            <text x="4" y="22" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">backward</text>
+            <rect x="80" y="8" width="460" height="22" rx="3" fill="rgba(13,71,161,0.75)"/>
+            <text x="4" y="52" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a">all-reduce</text>
+            <rect x="200" y="38" width="120" height="22" rx="3" fill="rgba(21,101,192,0.55)"/>
+            <rect x="340" y="38" width="120" height="22" rx="3" fill="rgba(21,101,192,0.55)"/>
+            <rect x="480" y="38" width="60" height="22" rx="3" fill="rgba(21,101,192,0.55)"/>
+            <text x="280" y="78" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">time →</text>
+          </svg>
+          <figcaption>Early layers finish backward first; their buckets start communicating while deeper layers still compute.</figcaption>
+        </figure>
+        <p>PyTorch DDP, Megatron style schedules, and DeepSpeed all exploit this pipeline inside the backward pass. NCCL runs collectives on separate CUDA streams so copies and reductions can overlap with matmuls on other streams.</p>
+        <p>Overlap improves throughput and can smooth the power trace a little, but it does not erase phases. The first buckets still wait for early layers. The last bucket must finish before the optimizer runs. Stragglers on the network still stall everyone. You have reduced wall clock; you have not removed the collective as a shared rhythm.</p>
+
+        <h2>Power during communication vs compute</h2>
+        <p>During forward and backward, tensor cores and matrix units run hot. Power approaches thermal design power. During all reduce, arithmetic intensity collapses. Cores are not doing dense GEMMs. Instead DMA engines, NVLink ports, NICs, and memory controllers move data. Power usually drops, sometimes to a clear trough between compute peaks.</p>
+        <p>Communication is not free electrically. Links draw power. Memory copies cost energy. A GPU in a collective is busy, just not in the way that maxes out FP8 tensor throughput. Facility meters still see a dip relative to compute peaks because the silicon is doing less math per watt.</p>
+        <p>Overlap mixes the two: some GPUs compute while others communicate, or one device does both on different units. The aggregate rack power becomes a blend, but at large scale the barrier edges remain. When the last all reduce completes and the optimizer fires, or when the next forward pass starts, thousands of devices can shift state together again.</p>
+        <p>That is the link to power infrastructure. All reduce is why the “sync” phase in the training loop exists electrically, not only in software. Optimizing the network makes training faster; it does not remove the synchronized dip unless you change the training model itself.</p>
+
+        <p>The next post steps back from algorithms to physics: why identical per GPU dips become megawatt scale swings when every worker shares the same clock.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-04-distributed-training-parallelism.html">Previous: Distributed training in plain terms</a>
+        <a href="blog-06-synchronized-gpu-power-swings.html">Next: Why thousands of GPUs swing power together</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

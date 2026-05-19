@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modeling inference power without hiding the spikes | Sudharshan Rao Allu</title>
+  <meta name="description" content="A four stage pipeline from traffic to facility load: workload features, temporal state classification, per server power traces, and aggregation with PUE and PCC.">
+  <link rel="canonical" href="https://sudharshanraoallu.github.io/blogs/blog-03-modeling-inference-power-traces.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 3 · Power modeling · ~6 min read</p>
+        <h1>Modeling inference power without hiding the spikes</h1>
+      </header>
+
+      <div class="blog-body">
+        <p>Capacity planning for LLM serving often starts with a comfortable number: average utilization, average watts per GPU, multiply by fleet size. That number is useful for finance. It is dangerous for electrical design.</p>
+        <p>Part 1 named the GPU phases; Part 2 traced how requests become facility load and what to meter. Here we build <em>synthetic</em> power traces from traffic assumptions while keeping spikes and ramps in the model.</p>
+
+        <h2>Why averages fail</h2>
+        <p>Imagine a cluster that reports 60% average GPU utilization and 420 W average draw per chip. Multiply by server count and you get a headline facility load. That load is real in some accounting sense. It is not what decides whether a breaker trips during a viral spike.</p>
+        <p>Averages hide:</p>
+        <ul>
+          <li>Short prefill bursts that push individual GPUs toward 700 W or more for seconds</li>
+          <li>Long decode stretches where many GPUs sit in a moderate, steady band</li>
+          <li>Correlated prefill when many requests land at once</li>
+          <li>Fast ramps when phase mix changes faster than delivery equipment likes</li>
+        </ul>
+        <p>Design around the mean and you either overbuild forever or underbuild for peaks you never modeled. High-fidelity traces expose peak-to-mean ratio, ramp rate, and how often the fleet oscillates. Those are the quantities infrastructure people actually need.</p>
+
+        <h2>Four stages: traffic to facility load</h2>
+        <p>A practical trace model chains four transformations. Each stage has a clear input and output.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Modeling pipeline</p>
+          <div class="blog-flow-h">
+            <div class="blog-flow-box">Traffic<small>arrivals, lengths</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box">Features<small>A<sub>t</sub>, occupancy</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box">States<small>GMM + BiGRU</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box">Server trace<small>sample watts</small></div>
+            <span class="blog-flow-arrow">→</span>
+            <div class="blog-flow-box accent">Facility<small>+ PUE, PCC</small></div>
+          </div>
+          <figcaption>Synthetic traces preserve spikes at each hop instead of collapsing to one average.</figcaption>
+        </figure>
+
+        <h3>Stage 1: traffic to workload features</h3>
+        <p>Start from assumptions you can defend: arrival rate, prompt length distribution, output length distribution, maybe a diurnal curve. Turn them into a discrete time series of workload features at each step.</p>
+        <p>Typical features include active request count, change in active requests (arrivals minus departures), batch occupancy, and estimates of how much of the batch is in prefill versus decode. You are not predicting power yet. You are describing demand in a form a temporal model can read.</p>
+
+        <h3>Stage 2: features to power state labels</h3>
+        <p>Each time step gets classified into one of a small set of power states. That is a sequence problem: the label at <em>t</em> depends on what happened at <em>t − 1</em> and what is about to happen. A bidirectional GRU (BiGRU) is a common choice because it reads context forward and backward along the trace.</p>
+        <p>The states themselves should not be guessed from folklore alone. Fit a Gaussian mixture model (GMM) on measured power telemetry first, then attach names like prefill dominant or decode dominant by comparing cluster means to known execution behavior. Discovery and labeling are separate steps on purpose.</p>
+
+        <h3>Stage 3: state trajectory to per server trace</h3>
+        <p>Each state maps to a power distribution, not a single watt value. Prefill dominant might be high mean, moderate variance. Idle might be low mean with a floor from warm memory and background services.</p>
+        <p>Given a sequence of states, sample or draw from the matching distribution step by step while respecting transition statistics learned from data. The output is a synthetic but plausible watt trace for one server over time.</p>
+
+        <h3>Stage 4: server traces to facility aggregation</h3>
+        <p>Sum traces across racks with an explicit correlation model. Servers that receive traffic together will spike together; independence assumptions underestimate peaks. Apply PUE as a function of IT load when you can, not as one scalar multiplier for all conditions. The result is facility demand at the point of common coupling (PCC), where the grid meets the datacenter.</p>
+
+        <h2>Discovering states with a GMM</h2>
+        <p>Real serving rarely sits in exactly three neat boxes. Continuous batching creates mixed phases. Idle is not zero watts. A GMM treats the observed power histogram as a weighted sum of Gaussian components. Fitting reveals how many statistically distinct modes exist and their means and variances.</p>
+        <p>After fitting, hard labeling assigns human readable names. The highest mean, tightest cluster often maps to prefill dominant. The lowest mean with broad spread often maps to idle. Middle clusters become decode dominant or mixed depending on workload features at the same step.</p>
+
+        <table>
+          <thead>
+            <tr><th>State (after labeling)</th><th>Typical character</th><th>Illustrative mean</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Idle</td><td>Warm runtime, little useful compute</td><td>~180 W</td></tr>
+            <tr><td>Decode dominant</td><td>Memory bound, steady moderate draw</td><td>~320 W</td></tr>
+            <tr><td>Mixed</td><td>Continuous batching, prefill and decode together</td><td>~480 W</td></tr>
+            <tr><td>Prefill dominant</td><td>Compute heavy burst, near chip limit</td><td>~680 W</td></tr>
+          </tbody>
+        </table>
+        <p>Numbers are illustrative. Your clusters come from your hardware, model, and framework.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Discovered power modes (illustrative)</p>
+          <svg viewBox="0 0 480 140" role="img" aria-label="Bar chart of mean power by labeled state">
+            <text x="70" y="118" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">Idle</text>
+            <text x="170" y="118" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">Decode</text>
+            <text x="270" y="118" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">Mixed</text>
+            <text x="370" y="118" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">Prefill</text>
+            <rect x="50" y="78" width="40" height="32" rx="2" fill="rgba(74,74,74,0.4)"/>
+            <rect x="150" y="52" width="40" height="58" rx="2" fill="rgba(21,101,192,0.55)"/>
+            <rect x="250" y="32" width="40" height="78" rx="2" fill="rgba(13,71,161,0.45)"/>
+            <rect x="350" y="8" width="40" height="102" rx="2" fill="rgba(13,71,161,0.85)"/>
+            <text x="70" y="72" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">180W</text>
+            <text x="170" y="46" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">320W</text>
+            <text x="270" y="26" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">480W</text>
+            <text x="370" y="4" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">680W</text>
+            <line x1="30" y1="110" x2="450" y2="110" stroke="#e0ddd9"/>
+            <text x="8" y="60" font-family="Source Sans 3, sans-serif" font-size="9" fill="#4a4a4a" transform="rotate(-90,8,60)">mean power</text>
+          </svg>
+          <figcaption>GMM finds clusters first; labels come from telemetry and workload context.</figcaption>
+        </figure>
+
+        <h2>Four inference power states</h2>
+        <p>Once labeled, the four states line up with how operators already think about serving:</p>
+        <ul>
+          <li><strong>Prefill dominant.</strong> High power, short duration. Full sequence forward passes, KV cache written, tensor cores busy.</li>
+          <li><strong>Decode dominant.</strong> Moderate power, long duration. One token per step, cache reads dominate, draw below TDP but stable.</li>
+          <li><strong>Mixed.</strong> Intermediate power and higher variance when some batch slots prefill while others decode.</li>
+          <li><strong>Idle.</strong> Low but nonzero. Memory held, runtime resident, waiting for the next arrival.</li>
+        </ul>
+
+        <h2>Why a BiGRU for classification</h2>
+        <p>A server that just finished prefill is more likely to enter decode than to jump straight to deep idle. A spike back to prefill dominant power usually means new work arrived, not random noise. Those are temporal rules.</p>
+        <p>A model that classifies each step alone misses them. A BiGRU does not. Forward and backward passes over the feature sequence let each label use past and future context, which stabilizes state sequences and produces traces that look like measured data.</p>
+
+        <pre><code>Features per step t (example):
+  A_t        active requests
+  dA_t       change in active requests
+  occupancy  fraction of batch capacity used
+  queue_len  requests waiting for prefill
+
+BiGRU → state label s_t in {PREFILL, DECODE, MIXED, IDLE}
+
+Map s_t → sample P_t from state specific distribution</code></pre>
+
+        <h2>Dense models vs mixture of experts</h2>
+        <p>Dense models activate essentially all parameters every token. Power per state is relatively predictable for a given batch shape.</p>
+        <p>MoE models route each token through a small expert subset. Decode power varies with which experts fire. Mixed state behavior shifts because decode arithmetic intensity differs from dense decode even when total parameter count is huge.</p>
+        <p class="blog-note">A trace model fit only on dense telemetry will misread MoE serving unless you retrain or apply corrections tuned to that architecture.</p>
+
+        <h2>Aggregation, PUE, and PCC</h2>
+        <p>Three effects matter when you roll server traces up:</p>
+        <ul>
+          <li><strong>Arrival correlation.</strong> Bursts align prefill across machines. Variances add; peaks grow.</li>
+          <li><strong>Heterogeneity.</strong> Mixed model sizes and batching policies partially desynchronize swings, but rarely cancel them completely.</li>
+          <li><strong>PUE.</strong> Facility load exceeds IT load by cooling, distribution, and auxiliary draw. PUE often worsens at partial load. Use a curve when you have one.</li>
+        </ul>
+        <p>The PCC is the electrical interface to the grid. Utilities, interconnect studies, and reactive power planning care about PCC demand, not average watts per GPU on a dashboard. Getting PCC right requires the full pipeline, not a fleet average.</p>
+
+        <h2>What you do with the trace</h2>
+        <p>Once built, the same trace supports breaker and UPS sizing, tariff conversations where volatility matters, comparing batching policies without running every experiment on metal, and baselines for anomaly detection.</p>
+        <p>The point is not machine learning for its own sake. It is to keep spikes and ramps in the model so planners cannot pretend they are not there.</p>
+      </div>
+
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-02-serving-workload-power-demand.html">Previous: From requests to facility load</a>
+        <a href="blog-04-distributed-training-parallelism.html">Next: Distributed training in plain terms</a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>
