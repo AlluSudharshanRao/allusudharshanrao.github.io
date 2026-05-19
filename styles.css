@@ -99,6 +99,7 @@ body {
 body.page-about .nav-links a[href="index.html"],
 body.page-projects .nav-links a[href="projects.html"],
 body.page-hackathons .nav-links a[href="hackathons.html"],
+body.page-blogs .nav-links a[href="blogs.html"],
 body.page-experience .nav-links a[href="experience.html"],
 body.page-publications .nav-links a[href="publications.html"],
 body.page-cv .nav-links a[href="cv.html"] {
