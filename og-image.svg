@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Sudharshan Rao Allu">
+ï»¿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Sudharshan Rao Allu">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#e8eef5"/>
@@ -21,7 +21,7 @@
     ML &amp; Backend Engineer @ NYU
   </text>
   <text x="170" y="340" font-size="26" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="500" fill="#4a4a4a">
-    Python · ML pipelines · REST APIs · Docker/Kubernetes
+    Python ï¿½ ML pipelines ï¿½ REST APIs ï¿½ Docker/Kubernetes
   </text>
 
   <g transform="translate(170,395)">
@@ -32,6 +32,6 @@
   </g>
 
   <text x="170" y="500" font-size="18" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="600" fill="#1a1a1a">
-    sudharshanraoallu.github.io
+    allusudharshanrao.github.io
   </text>
 </svg>
