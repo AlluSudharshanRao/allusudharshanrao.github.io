@@ -63,7 +63,8 @@
 
     <section class="section">
       <div class="container container-narrow">
-        <p class="blog-series-note">A seven-part series I wrote while studying ML systems at NYU—connecting serving behavior, measurement, and datacenter scale. Read in order if you like, or jump to what you need.</p>
+        <p class="blog-series-note">Two series on ML systems and datacenter power, written while studying at NYU. Read in order within each series, or jump to what you need.</p>
+        <h2 class="blog-series-heading">Series 1 — Serving, training, and power (Parts 1–7)</h2>
         <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-01-llm-inference-prefill-decode.html">How LLM inference actually runs</a></h3>
@@ -99,6 +100,31 @@
             <h3><a href="blogs/blog-07-time-frequency-domain-power.html">Reading datacenter power in time and frequency</a></h3>
             <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 7 · ~6 min</p>
             <p class="description">What a waveform shows, what an FFT adds, and why both views matter for grid planning.</p>
+          </article>
+        </div>
+
+        <h2 class="blog-series-heading">Series 2 — OpenG2G: AI datacenter–grid coordination (Parts 8–11)</h2>
+        <p class="blog-series-note">Based on the OpenG2G simulation platform (Chung et al., arXiv:2605.05519). Continues from Part 7 into runtime flexibility, co-simulation, and control.</p>
+        <div class="blog-list">
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-08-ai-datacenter-grid-coordination.html">When AI datacenters and the grid share a control loop</a></h3>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 8 · ~7 min</p>
+            <p class="description">Power flexibility, voltage limits, integral violation, and why inference leads the story.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-09-openg2g-simulation-platform.html">Inside OpenG2G: simulating datacenter and grid together</a></h3>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 9 · ~8 min</p>
+            <p class="description">ML.ENERGY traces, OpenDSS, multi-rate loops, and feasible power range.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-10-coordinating-inference-with-the-grid.html">Coordinating inference with the grid</a></h3>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 10 · ~9 min</p>
+            <p class="description">Batch size as a grid actuator; droop, OFO, and PPO; throughput vs voltage tradeoffs.</p>
+          </article>
+          <article class="card blog-card">
+            <h3><a href="blogs/blog-11-ai-choices-grid-flexibility.html">AI model choices and grid flexibility</a></h3>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 11 · ~8 min</p>
+            <p class="description">Model size, MoE, FP8, parallelism, and what they mean for coordination headroom.</p>
           </article>
         </div>
       </div>

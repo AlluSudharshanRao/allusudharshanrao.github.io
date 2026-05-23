@@ -1,2 +1,5 @@
 .DS_Store
 Thumbs.db
+
+# Local reference papers — not published to GitHub Pages
+docs/

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inside OpenG2G: simulating datacenter and grid together | Sudharshan Rao Allu</title>
+  <meta name="description" content="Architecture, ML.ENERGY traces, OpenDSS, multi-rate loops, and feasible power range.">
+  <link rel="canonical" href="https://allusudharshanrao.github.io/blogs/blog-09-openg2g-simulation-platform.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Inside OpenG2G: simulating datacenter and grid together | Sudharshan Rao Allu">
+  <meta property="og:description" content="Architecture, ML.ENERGY traces, OpenDSS, multi-rate loops, and feasible power range.">
+  <meta property="og:url" content="https://allusudharshanrao.github.io/blogs/blog-09-openg2g-simulation-platform.html">
+  <meta property="og:site_name" content="Sudharshan Rao Allu">
+  <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:published_time" content="2026-05-19">
+  <meta property="article:modified_time" content="2026-05-19">
+  <meta property="article:author" content="Sudharshan Rao Allu">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Inside OpenG2G: simulating datacenter and grid together | Sudharshan Rao Allu">
+  <meta name="twitter:description" content="Architecture, ML.ENERGY traces, OpenDSS, multi-rate loops, and feasible power range.">
+  <meta name="twitter:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta name="author" content="Sudharshan Rao Allu">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 9 · OpenG2G series · ~8 min read</p>
+        <h1>Inside OpenG2G: simulating datacenter and grid together</h1>
+      </header>
+      <div class="blog-body">
+
+        <p class="blog-series-kicker">Part 9 · OpenG2G co-simulates a <strong>datacenter backend</strong>, a <strong>grid backend</strong>, and pluggable <strong>controllers</strong> on a multi-rate loop <a href="#refs">[1]</a>.</p>
+
+        <h2>Why one simulator is not enough</h2>
+        <p>Grid papers rarely run vLLM. ML papers rarely run OpenDSS. OpenG2G stitches both: measured inference behavior drives datacenter power, while a distribution feeder simulator returns voltages and violations. Controllers sit in the middle with a small Python API—swap a policy, a model mix, or an IEEE test feeder without rewriting the loop.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">OpenG2G architecture (simplified from Fig. 1)</p>
+          <svg viewBox="0 0 640 280" role="img" aria-label="Simulation loop connecting datacenter grid and controller">
+            <rect x="40" y="24" width="160" height="100" rx="10" fill="rgba(13,71,161,0.1)" stroke="#0d47a1"/>
+            <text x="120" y="52" font-family="Source Sans 3,sans-serif" font-size="12" fill="#0d47a1" text-anchor="middle" font-weight="600">Datacenter</text>
+            <text x="120" y="72" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">model, GPU, replicas</text>
+            <text x="120" y="88" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">→ power, throughput, latency</text>
+            <text x="120" y="108" font-family="Source Sans 3,sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">ML.ENERGY traces [7,8]</text>
+            <rect x="440" y="24" width="160" height="100" rx="10" fill="rgba(74,74,74,0.12)" stroke="#4a4a4a"/>
+            <text x="520" y="52" font-family="Source Sans 3,sans-serif" font-size="12" fill="#4a4a4a" text-anchor="middle" font-weight="600">Grid</text>
+            <text x="520" y="72" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">topology, taps, loads</text>
+            <text x="520" y="88" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">→ bus voltages, violations</text>
+            <text x="520" y="108" font-family="Source Sans 3,sans-serif" font-size="8" fill="#4a4a4a" text-anchor="middle">OpenDSS wrapper [12,24]</text>
+            <rect x="220" y="160" width="200" height="88" rx="10" fill="rgba(21,101,192,0.18)" stroke="#1565c0"/>
+            <text x="320" y="192" font-family="Source Sans 3,sans-serif" font-size="12" fill="#1565c0" text-anchor="middle" font-weight="600">Controller</text>
+            <text x="320" y="212" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">droop · OFO · PPO · custom</text>
+            <text x="320" y="232" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">datacenter + grid commands</text>
+            <path d="M 200 74 L 260 200" stroke="#1565c0" marker-end="url(#arr)" fill="none"/>
+            <path d="M 440 74 L 380 200" stroke="#1565c0" marker-end="url(#arr)" fill="none"/>
+            <path d="M 280 200 L 200 124" stroke="#0d47a1" marker-end="url(#arr2)" fill="none"/>
+            <path d="M 360 200 L 440 124" stroke="#4a4a4a" marker-end="url(#arr3)" fill="none"/>
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1565c0"/></marker>
+              <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0d47a1"/></marker>
+              <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#4a4a4a"/></marker>
+            </defs>
+            <rect x="200" y="248" width="240" height="24" rx="4" fill="rgba(13,71,161,0.08)"/>
+            <text x="320" y="264" font-family="Source Sans 3,sans-serif" font-size="10" fill="#0d47a1" text-anchor="middle">Simulation loop · multi-rate ticks · reproducible logs</text>
+          </svg>
+          <figcaption>Based on OpenG2G Fig. 1 <a href="#refs">[1]</a>.</figcaption>
+        </figure>
+
+        <h2>Datacenter backend: measurements, not guesses</h2>
+        <p>By default the datacenter replays <strong>ML.ENERGY Benchmark</strong> traces: power, throughput, and latency for production-style inference stacks <a href="#refs">[7,8]</a>. You configure model (Llama, Qwen, GPT-OSS, etc.), GPU type, latency target, and replica schedule. Controllers change batch size or replica count; the backend returns realistic tradeoffs. Training jobs can be overlaid with traces from large-model training runs <a href="#refs">[49 in 1]</a>.</p>
+
+        <h2>Grid backend: distribution feeders</h2>
+        <p>The stock grid wraps <strong>OpenDSS</strong> on IEEE 13-, 34-, and 123-bus test feeders <a href="#refs">[12,21,24]</a>. Primary objective: keep voltages in band. Reducing datacenter demand helps undervoltage; increasing demand can help overvoltage when the feeder has excess generation.</p>
+
+        <h2>Multi-rate simulation loop</h2>
+        <p>Each tick may advance datacenter, grid, and controller at different fractional rates (e.g. 0.1&nbsp;s datacenter steps). Grid power flow can be expensive; inference may need fine-grained power timelines. Centralized logging and seeding keep scenarios reproducible.</p>
+
+        <div class="blog-flow-v">
+          <div class="blog-flow-box">Read datacenter + grid state</div>
+          <div class="blog-flow-arrow" aria-hidden="true">↓</div>
+          <div class="blog-flow-box accent">Controller computes commands</div>
+          <div class="blog-flow-arrow" aria-hidden="true">↓</div>
+          <div class="blog-flow-box">Apply batch / replica / tap changes</div>
+          <div class="blog-flow-arrow" aria-hidden="true">↓</div>
+          <div class="blog-flow-box">Log power, tok/s, voltages, violations</div>
+        </div>
+
+        <h2>Feasible power range: the flexibility budget</h2>
+        <p>Before picking a controller, ask how far the datacenter <em>can</em> move. OpenG2G uses <strong>feasible power range</strong> (MW): max minus min datacenter power over inference configs that still meet the per-token latency target <a href="#refs">[1, §5]</a>. With batch size as the main knob, the endpoints are the smallest and largest batches that respect latency.</p>
+        <p>Wider span → more room to help the grid. Narrow span → coordination fights the hardware floor or the latency ceiling.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Feasible power range on a power–throughput curve</p>
+          <svg viewBox="0 0 640 220" role="img" aria-label="Power throughput curve with horizontal span">
+            <text x="8" y="110" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" transform="rotate(-90 8 110)">Throughput</text>
+            <line x1="56" y1="180" x2="580" y2="180" stroke="#4a4a4a"/>
+            <line x1="56" y1="40" x2="56" y2="180" stroke="#4a4a4a"/>
+            <text x="318" y="198" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">Datacenter power (MW)</text>
+            <path d="M 100 160 Q 220 140 340 90 T 520 55" fill="none" stroke="#1565c0" stroke-width="2.5"/>
+            <circle cx="100" cy="160" r="5" fill="#c62828"/>
+            <circle cx="520" cy="55" r="5" fill="#2e7d32"/>
+            <line x1="100" y1="175" x2="520" y2="175" stroke="#0d47a1" stroke-width="2"/>
+            <text x="310" y="168" font-family="Source Sans 3,sans-serif" font-size="10" fill="#0d47a1" text-anchor="middle">feasible power range (MW)</text>
+            <text x="100" y="152" font-family="Source Sans 3,sans-serif" font-size="9" fill="#c62828">min batch (latency floor)</text>
+            <text x="500" y="48" font-family="Source Sans 3,sans-serif" font-size="9" fill="#2e7d32">max batch (latency cap)</text>
+          </svg>
+          <figcaption>Horizontal span of the curve at fixed latency SLO <a href="#refs">[1, Fig. 5b]</a>.</figcaption>
+        </figure>
+
+        <p>Experiments anchor peak power (e.g. 3&nbsp;MW at max batch) so comparisons isolate model and deployment choices, not “how many GPUs you bought” <a href="#refs">[1, §5]</a>.</p>
+
+        <h2 id="refs">References</h2>
+        <ol class="blog-refs">
+          <li>Chung et al., OpenG2G, arXiv:2605.05519, 2026.</li>
+          <li>Wu et al., ML.ENERGY Benchmark, <em>ASPLOS</em> 2024 — cited as [7,8] in [1].</li>
+          <li>Kersting et al., OpenDSS, <em>IEEE PES</em> — [12,24] in [1].</li>
+          <li>IEEE test feeders — [21] in [1].</li>
+        </ol>
+
+      </div>
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-08-ai-datacenter-grid-coordination.html">Previous: AI datacenter and the grid</a>
+        <a href="blog-10-coordinating-inference-with-the-grid.html">Next: Coordinating inference with the grid</a>
+      </nav>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

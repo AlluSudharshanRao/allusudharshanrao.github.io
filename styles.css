@@ -671,6 +671,44 @@ a.contact-item:hover {
   padding: 0.15rem 0;
 }
 
+.blog-series-heading {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: var(--space-2xl) 0 var(--space-md);
+  color: var(--color-text);
+}
+
+.blog-series-heading:first-of-type {
+  margin-top: 0;
+}
+
+.blog-series-kicker {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  border-left: 3px solid var(--color-accent);
+  padding-left: var(--space-md);
+  margin-bottom: 1.5em;
+  line-height: 1.55;
+}
+
+.blog-refs {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding-left: 1.25rem;
+  margin: 0.5em 0 0;
+}
+
+.blog-refs li { margin-bottom: 0.65em; }
+
+.blog-refs a { color: var(--color-accent); }
+
+.blog-refs-note {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-md);
+}
+
 @media (max-width: 700px) {
   .nav-toggle { display: flex; }
   .nav-links {

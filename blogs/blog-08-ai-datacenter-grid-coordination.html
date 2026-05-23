@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When AI datacenters and the grid share a control loop | Sudharshan Rao Allu</title>
+  <meta name="description" content="Power flexibility, voltage limits, and why inference-first coordination matters for the grid.">
+  <link rel="canonical" href="https://allusudharshanrao.github.io/blogs/blog-08-ai-datacenter-grid-coordination.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="When AI datacenters and the grid share a control loop | Sudharshan Rao Allu">
+  <meta property="og:description" content="Power flexibility, voltage limits, and why inference-first coordination matters for the grid.">
+  <meta property="og:url" content="https://allusudharshanrao.github.io/blogs/blog-08-ai-datacenter-grid-coordination.html">
+  <meta property="og:site_name" content="Sudharshan Rao Allu">
+  <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:published_time" content="2026-05-19">
+  <meta property="article:modified_time" content="2026-05-19">
+  <meta property="article:author" content="Sudharshan Rao Allu">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="When AI datacenters and the grid share a control loop | Sudharshan Rao Allu">
+  <meta name="twitter:description" content="Power flexibility, voltage limits, and why inference-first coordination matters for the grid.">
+  <meta name="twitter:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta name="author" content="Sudharshan Rao Allu">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 8 · OpenG2G series · ~7 min read</p>
+        <h1>When AI datacenters and the grid share a control loop</h1>
+      </header>
+      <div class="blog-body">
+
+        <p class="blog-series-kicker">Series extension (Parts 8–11), based on the OpenG2G paper <a href="#refs">[1]</a>. Builds on <a href="blog-07-time-frequency-domain-power.html">Part 7</a>: we measured how AI loads wiggle; here we ask what operators can do about it <em>while serving still runs</em>.</p>
+
+        <p>AI datacenters are no longer background loads on the grid. A single modern site can draw tens of megawatts; planned campuses are sized in <strong>gigawatts</strong>—on the order of 1.7× the average load of San Francisco for one 1&nbsp;GW site <a href="#refs">[1]</a>. That scale slows interconnection, pushes new transmission, and makes voltage and reliability studies harder. One response gaining traction is <strong>runtime power flexibility</strong>: the datacenter agrees to raise or lower draw on short notice by turning software knobs, instead of waiting years for new wires.</p>
+
+        <h2>Runtime coordination, not siting studies</h2>
+        <p>OpenG2G focuses on <strong>AI datacenter–grid runtime coordination</strong> <a href="#refs">[1]</a>: a closed loop where grid state (voltages, violations) and datacenter state (power, throughput, latency) co-evolve, and a controller issues commands to either side at millisecond-to-minute cadence. That is different from interconnection planning or picking a site on a map. The question here is: <em>given a running LLM fleet, how much can you move power without breaking SLOs, and what does that do to the feeder?</em></p>
+        <p>Inference is the natural workload to study first: industry estimates put <strong>80–90% of AI compute demand</strong> on inference, not training <a href="#refs">[1,20,38,39]</a>.</p>
+
+        <h2>Grid picture for ML engineers</h2>
+        <p>Consumers attach at <strong>buses</strong> linked by lines. Bulk power enters at a source bus (substation or generator). A datacenter is modeled as one large load whose watts follow whatever the GPUs are doing.</p>
+        <p>Operators keep bus voltages in a tight band (often within about <strong>±5% of nominal</strong>). Undervoltage stresses equipment and stability; overvoltage is also out of limits. Classic grid actuators—tap changers, capacitor banks, storage—have latencies from sub-second to minutes. A datacenter that can shed or absorb megawatts in seconds gives the operator another lever while mechanical devices catch up.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Datacenter as a controllable load on a feeder</p>
+          <svg viewBox="0 0 640 200" role="img" aria-label="Source bus, lines, datacenter load">
+            <rect x="24" y="72" width="88" height="56" rx="8" fill="rgba(13,71,161,0.12)" stroke="#0d47a1"/>
+            <text x="68" y="104" font-family="Source Sans 3,sans-serif" font-size="11" fill="#0d47a1" text-anchor="middle">Grid source</text>
+            <line x1="112" y1="100" x2="200" y2="100" stroke="#4a4a4a" stroke-width="3"/>
+            <line x1="200" y1="100" x2="288" y2="100" stroke="#4a4a4a" stroke-width="3"/>
+            <circle cx="200" cy="100" r="6" fill="#fff" stroke="#4a4a4a"/>
+            <circle cx="288" cy="100" r="6" fill="#fff" stroke="#4a4a4a"/>
+            <rect x="288" y="56" width="120" height="88" rx="8" fill="rgba(21,101,192,0.2)" stroke="#1565c0"/>
+            <text x="348" y="92" font-family="Source Sans 3,sans-serif" font-size="11" fill="#1565c0" text-anchor="middle">AI datacenter</text>
+            <text x="348" y="112" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">LLM inference load</text>
+            <text x="348" y="130" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="middle">power P(t) from batch, replicas, model</text>
+            <line x1="408" y1="100" x2="520" y2="100" stroke="#4a4a4a" stroke-width="3"/>
+            <rect x="520" y="80" width="96" height="40" rx="6" fill="rgba(74,74,74,0.15)"/>
+            <text x="568" y="104" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">Other loads</text>
+            <text x="320" y="168" font-family="Source Sans 3,sans-serif" font-size="10" fill="#0d47a1" text-anchor="middle">Controller can signal: reduce P (undervoltage) or increase P (overvoltage)</text>
+          </svg>
+          <figcaption>Adapted from the OpenG2G problem setup <a href="#refs">[1, Fig. 1 context]</a>.</figcaption>
+        </figure>
+
+        <h2>When the grid is stressed vs when it has headroom</h2>
+        <table>
+          <thead><tr><th>Grid condition</th><th>Typical signal</th><th>Datacenter response</th></tr></thead>
+          <tbody>
+            <tr><td>Undervoltage / high net load</td><td>Voltage below band</td><td><strong>Shed</strong> load: smaller batches, fewer replicas, lower power</td></tr>
+            <tr><td>Overvoltage / excess generation</td><td>Voltage above band</td><td><strong>Absorb</strong> load: larger batches within latency limits</td></tr>
+            <tr><td>Normal</td><td>Voltage in band</td><td>Run for throughput; keep flexibility in reserve</td></tr>
+          </tbody>
+        </table>
+        <p>The knobs are the same ones you already tune for serving—model, precision, parallelism, <strong>batch size</strong>, replica count—only now they answer to grid metrics as well as tok/s and latency <a href="#refs">[7,8]</a>.</p>
+
+        <h2>How OpenG2G scores coordination</h2>
+        <p>A headline metric in the paper is <strong>integral voltage violation</strong> (pu·s): the time integral of how far bus voltages sit outside the allowed ±5% band. It rewards fixes that are both <em>short</em> and <em>shallow</em>. Token throughput (tok/s) captures the AI side. Good coordination improves violation without destroying serving economics.</p>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Integral violation vs time (conceptual)</p>
+          <svg viewBox="0 0 640 160" role="img" aria-label="Voltage band and violation shading">
+            <text x="8" y="14" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a">Voltage (pu)</text>
+            <line x1="56" y1="40" x2="600" y2="40" stroke="#c62828" stroke-dasharray="4 3"/>
+            <text x="604" y="44" font-family="Source Sans 3,sans-serif" font-size="9" fill="#c62828">+5% limit</text>
+            <line x1="56" y1="100" x2="600" y2="100" stroke="#c62828" stroke-dasharray="4 3"/>
+            <text x="604" y="104" font-family="Source Sans 3,sans-serif" font-size="9" fill="#c62828">−5% limit</text>
+            <line x1="56" y1="70" x2="600" y2="70" stroke="#4a4a4a" stroke-width="1"/>
+            <text x="52" y="74" font-family="Source Sans 3,sans-serif" font-size="9" fill="#4a4a4a" text-anchor="end">1.0</text>
+            <path d="M 56 70 L 120 68 L 200 95 L 280 102 L 360 88 L 440 65 L 520 72 L 600 70" fill="none" stroke="#1565c0" stroke-width="2"/>
+            <path d="M 200 100 L 200 102 L 280 102 L 280 100 Z" fill="rgba(198,40,40,0.25)"/>
+            <text x="240" y="118" font-family="Source Sans 3,sans-serif" font-size="9" fill="#c62828">Violation area → integral (pu·s)</text>
+            <text x="320" y="148" font-family="Source Sans 3,sans-serif" font-size="10" fill="#4a4a4a" text-anchor="middle">time</text>
+          </svg>
+          <figcaption>Shaded regions contribute to integral violation <a href="#refs">[1, §4]</a>.</figcaption>
+        </figure>
+
+        <div class="blog-note">
+          <p><strong>Bridge from Part 7.</strong> Your FFT and ramp analysis tells you <em>which frequencies</em> the load excites. Integral violation tells you whether the grid stayed within voltage limits while you moved that load. Both belong in the same story.</p>
+        </div>
+
+        <p>Next: how OpenG2G simulates this loop with real inference measurements and a distribution-grid backend.</p>
+
+        <h2 id="refs">References</h2>
+        <ol class="blog-refs">
+          <li>J.-W. Chung, Z. Liang, Y. Mao, J. Chen, M. Chowdhury, V. Dvorkin, <em>OpenG2G: A Simulation Platform for AI Datacenter–Grid Runtime Coordination</em>, arXiv:2605.05519, 2026. <a href="https://arxiv.org/abs/2605.05519" rel="noopener noreferrer">arXiv</a> · <a href="https://github.com/gpu2grid/openg2g" rel="noopener noreferrer">code</a></li>
+          <li>ML.ENERGY Benchmark — inference power/latency measurements used by OpenG2G <a href="#refs">[7,8 in 1]</a>.</li>
+        </ol>
+
+      </div>
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <span></span>
+        <a href="blog-09-openg2g-simulation-platform.html">Next: Inside OpenG2G</a>
+      </nav>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

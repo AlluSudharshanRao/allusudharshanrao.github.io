@@ -9,6 +9,10 @@ https://allusudharshanrao.github.io/blogs/blog-04-distributed-training-paralleli
 https://allusudharshanrao.github.io/blogs/blog-05-all-reduce-gradient-exchange.html
 https://allusudharshanrao.github.io/blogs/blog-06-synchronized-gpu-power-swings.html
 https://allusudharshanrao.github.io/blogs/blog-07-time-frequency-domain-power.html
+https://allusudharshanrao.github.io/blogs/blog-08-ai-datacenter-grid-coordination.html
+https://allusudharshanrao.github.io/blogs/blog-09-openg2g-simulation-platform.html
+https://allusudharshanrao.github.io/blogs/blog-10-coordinating-inference-with-the-grid.html
+https://allusudharshanrao.github.io/blogs/blog-11-ai-choices-grid-flexibility.html
 https://allusudharshanrao.github.io/experience.html
 https://allusudharshanrao.github.io/publications.html
 https://allusudharshanrao.github.io/cv.html

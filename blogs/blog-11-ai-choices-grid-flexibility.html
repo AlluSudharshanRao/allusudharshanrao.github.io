@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI model choices and grid flexibility | Sudharshan Rao Allu</title>
+  <meta name="description" content="How model size, MoE, FP8, and parallelism widen or narrow feasible power range.">
+  <link rel="canonical" href="https://allusudharshanrao.github.io/blogs/blog-11-ai-choices-grid-flexibility.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="AI model choices and grid flexibility | Sudharshan Rao Allu">
+  <meta property="og:description" content="How model size, MoE, FP8, and parallelism widen or narrow feasible power range.">
+  <meta property="og:url" content="https://allusudharshanrao.github.io/blogs/blog-11-ai-choices-grid-flexibility.html">
+  <meta property="og:site_name" content="Sudharshan Rao Allu">
+  <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:published_time" content="2026-05-19">
+  <meta property="article:modified_time" content="2026-05-19">
+  <meta property="article:author" content="Sudharshan Rao Allu">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI model choices and grid flexibility | Sudharshan Rao Allu">
+  <meta name="twitter:description" content="How model size, MoE, FP8, and parallelism widen or narrow feasible power range.">
+  <meta name="twitter:image" content="https://allusudharshanrao.github.io/og-image.png">
+  <meta name="author" content="Sudharshan Rao Allu">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+</head>
+<body class="page-blogs">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="header">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">SRA</a>
+      <button class="nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="../index.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../hackathons.html">Hackathons</a></li>
+        <li><a href="../blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="../experience.html">Experience</a></li>
+        <li><a href="../publications.html">Publications</a></li>
+        <li><a href="../cv.html">CV</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="section" tabindex="-1">
+    <article class="container container-narrow">
+      <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
+      <header class="blog-post-header">
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 11 · OpenG2G series · ~8 min read</p>
+        <h1>AI model choices and grid flexibility</h1>
+      </header>
+      <div class="blog-body">
+
+        <p class="blog-series-kicker">Part 11 · Model and deployment choices shift the <strong>feasible power range</strong>—and therefore how much grid coordination is even possible <a href="#refs">[1, §5]</a>.</p>
+
+        <h2>Same 3&nbsp;MW cap, different flexibility</h2>
+        <p>OpenG2G scales replica counts so peak power hits ~3&nbsp;MW at the largest latency-safe batch. Then it varies only the AI configuration. Any change in feasible range comes from the stack, not from “buying more capacity.”</p>
+
+        <h2>Model size and architecture</h2>
+        <p>On B200 GPUs, five models ordered by feasible range (widest first) tell a clear story <a href="#refs">[1, Fig. 5]</a>:</p>
+        <ul>
+          <li><strong>Qwen3 8B</strong> — widest span; OFO drives violation below 1&nbsp;pu·s.</li>
+          <li><strong>Qwen3 32B</strong> — latency target caps max batch at 128 vs 256 on 8B, lowering the ceiling.</li>
+          <li><strong>Qwen3 30B A3B (MoE)</strong> — only ~3B active params but routing keeps GPUs busier at small batch, <strong>raising the power floor</strong>.</li>
+          <li><strong>GPT-OSS 120B</strong> — large dense stack, narrower span.</li>
+          <li><strong>Qwen3 235B A22B</strong> — even min batch draws high power; throughput collapses vs smaller models.</li>
+        </ul>
+
+        <figure class="blog-figure">
+          <p class="blog-figure-label">Feasible range vs voltage outcome (schematic from Fig. 5a)</p>
+          <svg viewBox="0 0 640 200" role="img" aria-label="Bar chart model flexibility">
+            <text x="8" y="14" font-size="10" fill="#4a4a4a">log scale violation</text>
+            <text x="120" y="32" font-size="9" fill="#4a4a4a">Qwen3 8B</text>
+            <rect x="100" y="140" width="180" height="24" fill="#2e7d32" opacity="0.7"/>
+            <text x="120" y="32" font-size="9" fill="#4a4a4a" dx="140">32B</text>
+            <rect x="240" y="100" width="100" height="24" fill="#1565c0" opacity="0.6"/>
+            <text x="360" y="32" font-size="9">30B MoE</text>
+            <rect x="360" y="80" width="70" height="24" fill="#ff8f00" opacity="0.6"/>
+            <text x="450" y="32" font-size="9">120B</text>
+            <rect x="450" y="90" width="50" height="24" fill="#7b1fa2" opacity="0.5"/>
+            <text x="520" y="32" font-size="9">235B</text>
+            <rect x="520" y="60" width="30" height="24" fill="#c62828" opacity="0.5"/>
+            <text x="320" y="185" font-size="10" fill="#4a4a4a" text-anchor="middle">bar width ∝ feasible power range (wider left, narrower right)</text>
+          </svg>
+          <figcaption>Narrower range → less room for OFO to improve violation at fixed peak MW.</figcaption>
+        </figure>
+
+        <h2>Precision: BF16 vs FP8</h2>
+        <p>For Qwen3 235B on 8× H100, decode at small batch is memory-bound—tensor cores under-used, power sits low. <strong>FP8</strong> halves weight bytes, raises arithmetic intensity, and lifts the <strong>power floor</strong>. BF16 sees ~100× violation drop under OFO vs ~2× for FP8 because BF16 had more headroom to shed load <a href="#refs">[1, Fig. 6]</a>. Faster inference is not always more grid-friendly.</p>
+
+        <h2>Parallelism</h2>
+        <p>Expert parallelism changes feasible batch range. Doubling parallelism on GPT-OSS 120B widens power span noticeably; the same change on Qwen3 235B barely moves it—architecture matters as much as GPU count <a href="#refs">[1, Fig. 7]</a>.</p>
+
+        <table>
+          <thead><tr><th>Knob</th><th>Effect on flexibility</th></tr></thead>
+          <tbody>
+            <tr><td>Smaller / dense model</td><td>Often wider feasible range</td></tr>
+            <tr><td>MoE routing</td><td>Higher floor at low batch</td></tr>
+            <tr><td>Stricter latency SLO</td><td>Lowers max batch ceiling</td></tr>
+            <tr><td>FP8 vs BF16</td><td>FP8 raises floor, shrinks shed room</td></tr>
+            <tr><td>More expert parallel</td><td>Model-dependent widening</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Design takeaways</h2>
+        <ol>
+          <li><strong>Co-design serving and interconnection.</strong> Pick model, precision, and parallelism knowing they set the MW span you can offer the utility.</li>
+          <li><strong>Simulate before you promise.</strong> OpenG2G lets you replay measured inference against IEEE feeders and compare droop, OFO, and PPO on identical scenarios <a href="#refs">[1]</a>.</li>
+          <li><strong>Keep measuring.</strong> Parts 1–7 emphasized traces; OpenG2G grounds coordination in the same ML.ENERGY style data.</li>
+        </ol>
+
+        <p>Open source: <a href="https://github.com/gpu2grid/openg2g" rel="noopener noreferrer">github.com/gpu2grid/openg2g</a>.</p>
+
+        <div class="blog-note">
+          <p><strong>Series close.</strong> Parts 1–7 explained what AI loads do to power. Parts 8–11 explain how measured inference and grid simulators can close the loop when operators need flexibility without shutting off chatbots.</p>
+        </div>
+
+        <h2 id="refs">References</h2>
+        <ol class="blog-refs">
+          <li>J.-W. Chung, Z. Liang, Y. Mao, J. Chen, M. Chowdhury, V. Dvorkin, <em>OpenG2G: A Simulation Platform for AI Datacenter–Grid Runtime Coordination</em>, arXiv:2605.05519v1, 6 May 2026. <a href="https://arxiv.org/abs/2605.05519" rel="noopener noreferrer">https://arxiv.org/abs/2605.05519</a></li>
+          <li>OpenG2G repository: <a href="https://github.com/gpu2grid/openg2g" rel="noopener noreferrer">https://github.com/gpu2grid/openg2g</a></li>
+          <li>Wu et al., ML.ENERGY Benchmark — [7,8] in [1].</li>
+          <li>OpenDSS — [12,24]; IEEE feeders — [21]; training traces — [49] in [1].</li>
+          <li>Industry inference share — [1,20,38,39] in [1].</li>
+          <li>Datacenter flexibility commitments — [9,45,46] in [1].</li>
+        </ol>
+        <p class="blog-refs-note">Numbered citations in the text follow the reference list in [1]; see the arXiv paper for the full bibliography.</p>
+
+      </div>
+      <nav class="blog-nav-links" aria-label="Post navigation">
+        <a href="blog-10-coordinating-inference-with-the-grid.html">Previous: Coordinating inference with the grid</a>
+        <span></span>
+      </nav>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Sudharshan Rao Allu. <a href="../blogs.html">More blogs</a></p>
+    </div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>
