@@ -1,0 +1,14 @@
+https://allusudharshanrao.github.io/
+https://allusudharshanrao.github.io/projects.html
+https://allusudharshanrao.github.io/hackathons.html
+https://allusudharshanrao.github.io/blogs.html
+https://allusudharshanrao.github.io/blogs/blog-01-llm-inference-prefill-decode.html
+https://allusudharshanrao.github.io/blogs/blog-02-serving-workload-power-demand.html
+https://allusudharshanrao.github.io/blogs/blog-03-modeling-inference-power-traces.html
+https://allusudharshanrao.github.io/blogs/blog-04-distributed-training-parallelism.html
+https://allusudharshanrao.github.io/blogs/blog-05-all-reduce-gradient-exchange.html
+https://allusudharshanrao.github.io/blogs/blog-06-synchronized-gpu-power-swings.html
+https://allusudharshanrao.github.io/blogs/blog-07-time-frequency-domain-power.html
+https://allusudharshanrao.github.io/experience.html
+https://allusudharshanrao.github.io/publications.html
+https://allusudharshanrao.github.io/cv.html
