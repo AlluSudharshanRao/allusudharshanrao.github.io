@@ -18,16 +18,16 @@
     Sudharshan Rao Allu
   </text>
   <text x="170" y="285" font-size="34" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="600" fill="#0d47a1">
-    ML &amp; Backend Engineer @ NYU
+    ML Systems &amp; Backend Engineer
   </text>
   <text x="170" y="340" font-size="26" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="500" fill="#4a4a4a">
-    Python � ML pipelines � REST APIs � Docker/Kubernetes
+    NYU Tandon · Grad May 2027 · ML, MLOps, Kubernetes, APIs
   </text>
 
   <g transform="translate(170,395)">
-    <rect width="210" height="42" rx="21" fill="rgba(13,71,161,0.10)"/>
-    <text x="105" y="29" text-anchor="middle" font-size="18" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="700" fill="#0d47a1">
-      Open to Summer 2026
+    <rect width="380" height="42" rx="21" fill="rgba(13,71,161,0.10)"/>
+    <text x="190" y="29" text-anchor="middle" font-size="16" font-family="Source Sans 3, system-ui, -apple-system, Segoe UI, sans-serif" font-weight="700" fill="#0d47a1">
+      Open to work · Spring 2027 · Full-time June 2027
     </text>
   </g>
 
