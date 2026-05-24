@@ -446,7 +446,11 @@ body.page-cv .nav-links a[href="cv.html"] {
 .timeline-content h3 { margin: 0 0 var(--space-xs); font-size: 1.15rem; }
 .timeline-content .company { color: var(--color-accent); font-weight: 600; margin: 0 0 var(--space-xs); }
 .timeline-content .meta { font-size: 0.9rem; color: var(--color-text-muted); margin: 0 0 var(--space-sm); }
+.timeline-content .project-meta { font-size: 0.85rem; font-weight: 600; color: var(--color-accent); margin: 0 0 var(--space-sm); }
+.timeline-content .project-desc { margin: 0 0 var(--space-sm); font-size: 0.95rem; line-height: 1.6; }
+.timeline-content .project-skills { margin: var(--space-sm) 0 0; }
 .timeline-content .description { margin: 0; font-size: 0.95rem; color: var(--color-text-muted); }
+.section .timeline + .project-group-heading { margin-top: var(--space-2xl); }
 
 .project-cards { display: grid; gap: var(--space-lg); }
 .project-card {
