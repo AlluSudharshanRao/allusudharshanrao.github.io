@@ -611,6 +611,12 @@ body.page-cv .nav-links a[href="cv.html"] {
   text-decoration: underline;
 }
 .pub-venue { display: block; font-weight: normal; font-size: 0.9rem; color: var(--color-text-muted); margin-top: var(--space-xs); }
+.pub-cards { margin-top: var(--space-md); }
+.pub-card h3 { font-size: 1.1rem; line-height: 1.35; margin: 0 0 var(--space-xs); }
+.pub-card h3 a { color: var(--color-text); text-decoration: none; }
+.pub-card h3 a:hover { color: var(--color-accent); }
+.pub-card .project-skills { margin: var(--space-sm) 0; }
+.pub-card .project-links { margin-top: var(--space-sm); }
 
 .contact-grid {
   display: grid;
