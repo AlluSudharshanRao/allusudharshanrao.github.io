@@ -406,7 +406,23 @@ body.page-cv .nav-links a[href="cv.html"] {
 }
 .project-links a:hover { text-decoration: underline; }
 
-.cv-download { margin-top: var(--space-lg); }
+.cv-download {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+.cv-details {
+  margin-top: var(--space-lg);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+.cv-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+.cv-details summary:hover { text-decoration: underline; }
 
 .about-content p { margin: 0 0 var(--space-md); }
 .about-content .lead { font-size: 1.1rem; color: var(--color-text-muted); }
