@@ -26,4 +26,6 @@ Open `http://localhost:8000`.
 
 ## Deploy
 
-Hosted on **GitHub Pages** from `main`. SEO: `sitemap.xml`, `robots.txt`, `og-image.png`.
+Hosted on **GitHub Pages** from `main`. SEO: `sitemap.xml`, `robots.txt`, `og-image.png`, JSON-LD (`Person`, `WebSite`, breadcrumbs).
+
+After deploy, use [Google Search Console](https://search.google.com/search-console) to verify the site and submit `https://allusudharshanrao.github.io/sitemap.xml`. Align LinkedIn/GitHub headlines with **ML Systems & Backend Engineer** and link to this site.
