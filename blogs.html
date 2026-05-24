@@ -55,6 +55,7 @@
 
   <main id="main" tabindex="-1">
     <section class="section page-head">
+      <div class="page-head-illustration" aria-hidden="true"></div>
       <div class="container">
         <h1 class="page-title">Blogs</h1>
         <p class="section-intro">Notes on how LLM systems run, train, and draw power.</p>
@@ -64,7 +65,15 @@
     <section class="section">
       <div class="container container-narrow">
         <p class="blog-series-note">Two series on ML systems and datacenter power, written while studying at NYU. Read in order within each series, or jump to what you need.</p>
-        <h2 class="blog-series-heading">Series 1 — Serving, training, and power (Parts 1–7)</h2>
+        <h2 class="blog-series-heading has-banner">Series 1 — Serving, training, and power (Parts 1–7)</h2>
+        <div class="series-banner" aria-hidden="true">
+          <svg viewBox="0 0 640 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 40 Q80 20 160 38 T320 28 T480 42 T640 24" fill="none" stroke="#0d47a1" stroke-width="2" stroke-opacity="0.35"/>
+            <path d="M0 48 Q100 32 200 46 T400 36 T640 44" fill="none" stroke="#1565c0" stroke-width="1.5" stroke-opacity="0.25"/>
+            <rect x="24" y="8" width="20" height="26" rx="3" fill="#fff" stroke="#0d47a1" stroke-opacity="0.2"/>
+            <rect x="52" y="14" width="20" height="20" rx="3" fill="#fff" stroke="#1565c0" stroke-opacity="0.18"/>
+          </svg>
+        </div>
         <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-01-llm-inference-prefill-decode.html">How LLM inference actually runs</a></h3>
@@ -103,7 +112,17 @@
           </article>
         </div>
 
-        <h2 class="blog-series-heading">Series 2 — OpenG2G: AI datacenter–grid coordination (Parts 8–11)</h2>
+        <h2 class="blog-series-heading has-banner">Series 2 — OpenG2G: AI datacenter–grid coordination (Parts 8–11)</h2>
+        <div class="series-banner" aria-hidden="true">
+          <svg viewBox="0 0 640 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="80" cy="28" r="10" fill="none" stroke="#0d47a1" stroke-opacity="0.3"/>
+            <path d="M120 28 H220" stroke="#0d47a1" stroke-width="2" stroke-opacity="0.25"/>
+            <rect x="230" y="16" width="36" height="24" rx="4" fill="rgba(13,71,161,0.08)" stroke="#0d47a1" stroke-opacity="0.25"/>
+            <path d="M280 28 H380" stroke="#1565c0" stroke-width="2" stroke-opacity="0.2"/>
+            <rect x="400" y="12" width="48" height="32" rx="4" fill="rgba(21,101,192,0.06)" stroke="#1565c0" stroke-opacity="0.2"/>
+            <path d="M0 44 Q160 24 320 40 T640 32" fill="none" stroke="#0d47a1" stroke-width="1.5" stroke-opacity="0.2"/>
+          </svg>
+        </div>
         <p class="blog-series-note">Based on the OpenG2G simulation platform (Chung et al., arXiv:2605.05519). Continues from Part 7 into runtime flexibility, co-simulation, and control.</p>
         <div class="blog-list">
           <article class="card blog-card">
