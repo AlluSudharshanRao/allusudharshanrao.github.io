@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects | Sudharshan Rao Allu</title>
-  <meta name="description" content="Projects — end-to-end ML systems, MLOps, LLM serving, and backend services. Sudharshan Rao Allu.">
+  <meta name="description" content="ML systems and backend projects — MLOps on Kubernetes, RAG, LLM serving, FastAPI, and production APIs. Sudharshan Rao Allu.">
   <link rel="canonical" href="https://allusudharshanrao.github.io/projects.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Projects | Sudharshan Rao Allu">
-  <meta property="og:description" content="End-to-end ML systems, MLOps, LLM serving, and backend services.">
+  <meta property="og:description" content="End-to-end ML systems, MLOps, LLM serving, and production backend services.">
   <meta property="og:url" content="https://allusudharshanrao.github.io/projects.html">
   <meta property="og:site_name" content="Sudharshan Rao Allu">
   <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Projects | Sudharshan Rao Allu">
-  <meta name="twitter:description" content="End-to-end ML systems, MLOps, LLM serving, and backend services.">
+  <meta name="twitter:description" content="End-to-end ML systems, MLOps, LLM serving, and production backend services.">
   <meta name="twitter:image" content="https://allusudharshanrao.github.io/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,92 +47,90 @@
       <div class="page-head-illustration" aria-hidden="true"></div>
       <div class="container">
         <h1 class="page-title">Projects</h1>
-        <p class="section-intro">End-to-end ML systems—from training and experiment tracking to APIs, containers, and Kubernetes—and production backend services.</p>
+        <p class="section-intro">End-to-end <strong>ML systems</strong> (training → registry → serving on Kubernetes) and <strong>production backends</strong> (REST APIs, auth, caching, observability). Grouped by focus—not a fixed reading order.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
+        <h2 class="project-group-heading">ML systems (end-to-end)</h2>
+        <p class="project-group-note">Training, experiment tracking, inference services, and deployment automation.</p>
         <div class="project-cards">
-          <article class="project-card featured" id="ambient-code">
-            <h3>Ambient Code</h3>
-            <p class="project-desc">Developer tooling system that continuously observes editor and git activity, builds a persistent codebase model (symbols, churn, context), and surfaces LLM-generated insights as you work.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Ambient-Code" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>VS Code Extension</li>
-              <li>TypeScript</li>
-              <li>Python</li>
-              <li>SQLite</li>
-              <li>tree-sitter</li>
-            </ul>
-          </article>
-
-          <article class="project-card featured" id="llm-finetune-serving">
-            <h3>Production-Grade LLM Fine-Tuning &amp; Serving</h3>
-            <p class="project-desc">Fine-tuned Qwen2-1.5B-Instruct with <strong>LoRA</strong> and <strong>4-bit quantization</strong>, standardized experiments via a configuration-based framework, and built an end-to-end serving pipeline for a production-style inference workflow.</p>
-            <ul class="project-skills">
-              <li>PEFT (LoRA/QLoRA)</li>
-              <li>Transformers</li>
-              <li>Model Serving</li>
-            </ul>
-          </article>
-
           <article class="project-card featured" id="multi-tone-zulip">
             <h3>Multi-Tone Communication Assistant for Zulip</h3>
             <p class="project-meta">MLOps capstone · NYU · Chameleon Cloud</p>
-            <p class="project-desc">End-to-end MLOps stack on a two-node <strong>k3s</strong> cluster: Terraform + Ansible on OpenStack, platform services (<strong>MLflow</strong>, <strong>MinIO</strong>, Prometheus/Grafana), Sealed Secrets, scheduled backups, and <strong>Zulip</strong> via Helm. Built tone-aware draft suggestions (formal / friendly / neutral) with a Zulip bridge, classifier + generator serving, batch/retrain pipelines, and GitHub Actions promotion through staging, canary, and production aliases.</p>
+            <p class="project-desc">Full MLOps stack on <strong>k3s</strong>: Terraform/Ansible, MLflow, MinIO, tone classifier + generator serving, Zulip bridge, batch/retrain pipelines, and GitHub Actions promotion through staging, canary, and production.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Multi-Tone-Communication-Assistant-for-Zulip---MLOps" target="_blank" rel="noopener noreferrer">Main repo</a>
-              <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Platform / IaC repo</a>
+              <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Platform / IaC</a>
             </p>
             <ul class="project-skills">
               <li>Kubernetes</li>
-              <li>Terraform</li>
-              <li>Ansible</li>
               <li>MLflow</li>
+              <li>FastAPI</li>
               <li>Helm</li>
               <li>GitHub Actions</li>
             </ul>
           </article>
 
-          <article class="project-card featured" id="traffic-engineering">
-            <h3>Learning-Augmented Robust Traffic Engineering</h3>
-            <p class="project-meta">Research prototype · SDN · COMSNETS-related work</p>
-            <p class="project-desc">Research prototype for resilient <strong>software-defined networking</strong> under dynamic demand and link failures. Implements synthetic and benchmark topologies (Abilene, NSFNET), LSTM and Transformer traffic predictors, LP and robust LP multi-commodity routing, uncertainty-aware demand inflation, failure stress tests, and sweep/ablation tooling with reproducible CSV and plot outputs. Strongest advanced method: <strong>uncertainty-aware LSTM robust LP</strong>; Transformer leads nominal ML routing in tuned comparisons.</p>
+          <article class="project-card featured" id="rag">
+            <h3>RAG-Powered Document Assistant (Smart RAG)</h3>
+            <p class="project-meta">Sep 2025 – Dec 2025</p>
+            <p class="project-desc">Production RAG over PDF/DOCX/TXT/MD: ChromaDB, hybrid retrieval (semantic + BM25), multi-turn chat, citations, and analytics. Streamlit + Docker; <strong>live demo</strong> on Streamlit Cloud.</p>
             <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Learning-augmented-robust-traffic-engineering-for-resilient-software-defined-networks" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="https://github.com/AlluSudharshanRao/smart-rag-assistant" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="https://smart-rag-assistant.streamlit.app/" target="_blank" rel="noopener noreferrer">Live demo</a>
             </p>
             <ul class="project-skills">
-              <li>PyTorch</li>
-              <li>LSTM</li>
-              <li>Transformer</li>
-              <li>Linear Programming</li>
-              <li>SDN</li>
+              <li>LangChain</li>
+              <li>RAG</li>
+              <li>ChromaDB</li>
+              <li>Docker</li>
+            </ul>
+          </article>
+
+          <article class="project-card featured" id="mlops">
+            <h3>Real-Time Recommendation System with MLOps</h3>
+            <p class="project-meta">Sep 2025 – Dec 2025</p>
+            <p class="project-desc">ML pipeline with MLflow/DVC, hyperparameter tuning (R² −0.26 → 0.28), and <strong>FastAPI</strong> + Docker inference APIs for reproducible train → track → deploy.</p>
+            <ul class="project-skills">
+              <li>MLflow</li>
+              <li>DVC</li>
+              <li>FastAPI</li>
+              <li>Docker</li>
             </ul>
           </article>
 
           <article class="project-card featured" id="pixels-to-predictions">
             <h3>Pixels to Predictions (DL Vision Challenge)</h3>
-            <p class="project-meta">Multimodal VLM · 22 documented runs</p>
-            <p class="project-desc">End-to-end experimentation for a multimodal science multiple-choice benchmark: image + question + context → 0-indexed answer. Evolved from direct <strong>SmolVLM-500M</strong> generation to binary choice scoring, then validation-calibrated ensembling under a <strong>5M</strong> trainable-parameter budget. Best single model: <strong>0.907</strong> accuracy (<code>run_16</code>); best overall weighted ensemble: <strong>0.938</strong> (<code>run_22</code>). Repository preserves per-run notebooks, scripts, metrics, and ablation ledgers.</p>
+            <p class="project-meta">Multimodal VLM · documented experiment runs</p>
+            <p class="project-desc"><strong>SmolVLM-500M</strong> LoRA under a 5M-parameter budget: binary choice scoring and validation-calibrated ensembles. Best ensemble accuracy <strong>0.938</strong>; per-run notebooks, metrics, and ablation ledgers in repo.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Pixels-to-Predictions" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
               <li>SmolVLM</li>
               <li>LoRA</li>
-              <li>Multimodal</li>
-              <li>Ensembling</li>
               <li>PyTorch</li>
+              <li>Ensembling</li>
             </ul>
           </article>
 
-          <article class="project-card featured" id="svg-generation">
+          <article class="project-card" id="llm-finetune-serving">
+            <h3>Production-Grade LLM Fine-Tuning &amp; Serving</h3>
+            <p class="project-meta">LoRA · quantization · serving</p>
+            <p class="project-desc">Qwen2-1.5B-Instruct with <strong>LoRA</strong> and <strong>4-bit quantization</strong>, config-driven experiments, and an inference/serving workflow built for production-style deployment.</p>
+            <ul class="project-skills">
+              <li>PEFT (LoRA/QLoRA)</li>
+              <li>Transformers</li>
+              <li>Model serving</li>
+            </ul>
+          </article>
+
+          <article class="project-card" id="svg-generation">
             <h3>SVG Generation (Qwen2 LoRA)</h3>
-            <p class="project-meta">Fine-tuning · Hugging Face stack</p>
-            <p class="project-desc">LoRA fine-tuning pipeline for <strong>SVG code generation</strong> with <strong>Qwen2</strong>: training and inference notebooks, tokenizer/config artifacts, and safetensors weight index for reproducible adaptation from natural-language prompts to structured SVG output.</p>
+            <p class="project-meta">Fine-tuning · Hugging Face</p>
+            <p class="project-desc">LoRA pipeline for <strong>SVG code generation</strong> with Qwen2—training/inference notebooks, tokenizer config, and reproducible weight artifacts.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/SVG_Generation" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -140,14 +138,32 @@
               <li>Transformers</li>
               <li>LoRA</li>
               <li>Jupyter</li>
-              <li>Hugging Face</li>
             </ul>
           </article>
 
+          <article class="project-card" id="traffic-engineering">
+            <h3>Learning-Augmented Robust Traffic Engineering</h3>
+            <p class="project-meta">Research prototype · SDN</p>
+            <p class="project-desc">Resilient SDN routing under dynamic demand and link failures: LSTM/Transformer predictors, LP and robust LP routing, uncertainty-aware extensions, and sweep tooling (Abilene, NSFNET).</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Learning-augmented-robust-traffic-engineering-for-resilient-software-defined-networks" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>PyTorch</li>
+              <li>LSTM</li>
+              <li>Transformer</li>
+              <li>SDN</li>
+            </ul>
+          </article>
+        </div>
+
+        <h2 class="project-group-heading">Backend &amp; platform engineering</h2>
+        <p class="project-group-note">REST APIs, auth, caching, and infrastructure that ML services run on.</p>
+        <div class="project-cards">
           <article class="project-card" id="mlops-devops">
             <h3>MLOps Platform on Chameleon (IaC + k3s)</h3>
-            <p class="project-meta">DevOps / platform track</p>
-            <p class="project-desc">Reproducible <strong>Chameleon Cloud</strong> deployment: OpenStack VMs and floating IP via Terraform, <strong>k3s</strong> bootstrap with Ansible, HTTPS ingress on Traefik, and platform workloads—MLflow, MinIO (API + console), Prometheus, Grafana, and Zulip (Helm). Documents architecture, security notes, container/manifest matrix, and milestone runbooks for the shared MLOps capstone infrastructure.</p>
+            <p class="project-meta">Terraform · Ansible · Kubernetes</p>
+            <p class="project-desc">Reproducible Chameleon deployment: OpenStack + floating IP, k3s bootstrap, Traefik ingress, MLflow, MinIO, Prometheus/Grafana, and Zulip via Helm—with architecture docs and manifest matrix.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -156,14 +172,12 @@
               <li>Ansible</li>
               <li>Kubernetes</li>
               <li>Helm</li>
-              <li>Prometheus</li>
-              <li>Grafana</li>
             </ul>
           </article>
 
           <article class="project-card" id="url-shortener">
             <h3>URL Shortener</h3>
-            <p class="project-desc">Production-grade URL shortener built with Django and MySQL with rate limiting, security headers, caching for redirects, and a tested API for creating and resolving short links.</p>
+            <p class="project-desc">Django + MySQL shortener with rate limiting, security headers, Redis caching, and tested APIs for create/resolve flows.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/URL-Shortener" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -171,113 +185,109 @@
               <li>Django</li>
               <li>MySQL</li>
               <li>Redis</li>
-              <li>Testing</li>
             </ul>
           </article>
 
-          <article class="project-card featured" id="mlops">
-            <h3>Real-Time Recommendation System with MLOps</h3>
-            <p class="project-meta">Sep 2025 – Dec 2025</p>
-            <p class="project-desc">Complete <strong>ML pipeline</strong>: data ingestion, feature engineering, model training, evaluation, and inference. Experimentation and hyperparameter tuning improved model performance (R² from -0.26 to 0.28). <strong>MLflow</strong> and <strong>DVC</strong> for experiment and model version tracking and reproducible training workflows. Trained models deployed as REST APIs with <strong>FastAPI</strong> and <strong>Docker</strong> for scalable inference.</p>
-            <ul class="project-skills">
-              <li>MLflow</li>
-              <li>DVC</li>
-              <li>FastAPI</li>
-              <li>Docker</li>
-            </ul>
-          </article>
-          <article class="project-card featured" id="rag">
-            <h3>RAG-Powered Document Assistant (Smart RAG)</h3>
-            <p class="project-meta">Sep 2025 – Dec 2025</p>
-            <p class="project-desc">A production-ready RAG system for Q&A over documents. Supports <strong>PDF, DOCX, TXT, MD</strong> with batch uploads and configurable chunking. Uses ChromaDB for vector search and hybrid retrieval (semantic + BM25) for 10–20% retrieval accuracy gain. Features multi-turn conversational Q&A, source citations, document collections, and an analytics dashboard (query performance, relevance, response times). Built with LangChain, Streamlit, and Docker; deployed on Streamlit Cloud with optional OpenAI or local Sentence Transformers embeddings.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/smart-rag-assistant" target="_blank" rel="noopener noreferrer">Code</a>
-              <a href="https://smart-rag-assistant.streamlit.app/" target="_blank" rel="noopener noreferrer">Live demo</a>
-            </p>
-            <ul class="project-skills">
-              <li>LangChain</li>
-              <li>ChromaDB</li>
-              <li>Streamlit</li>
-              <li>Docker</li>
-            </ul>
-          </article>
           <article class="project-card" id="auth-api">
             <h3>Authentication API with JWT</h3>
-            <p class="project-desc">Django-based user authentication system with JWT for secure web application access. Implements <strong>user registration, login, password reset, and profile management</strong> via RESTful APIs. All endpoints tested with Postman. Uses Django REST Framework and token-based auth for stateless, scalable auth flows.</p>
+            <p class="project-desc">Django REST Framework auth: registration, login, password reset, and profile APIs with JWT for stateless clients.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Authentication-API-with-JWT" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
               <li>Django REST Framework</li>
+              <li>JWT</li>
             </ul>
           </article>
-          <article class="project-card">
-            <h3>Chatroom Application</h3>
-            <p class="project-desc">Real-time multi-client chatroom using <strong>Python socket programming</strong> and TCP/IP. The server listens for incoming connections, manages multiple clients, and routes messages between participants. Implements a clear server–client architecture with robust error handling and exception management for reliable operation.</p>
+        </div>
+
+        <h2 class="project-group-heading">Developer tools</h2>
+        <div class="project-cards">
+          <article class="project-card" id="ambient-code">
+            <h3>Ambient Code</h3>
+            <p class="project-desc">VS Code extension + Python backend: observes editor/git activity, builds a codebase model (symbols, churn), and surfaces LLM-generated insights in context.</p>
             <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Chat-Application" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="https://github.com/AlluSudharshanRao/Ambient-Code" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
-              <li>Computer Networking</li>
+              <li>VS Code Extension</li>
+              <li>TypeScript</li>
               <li>Python</li>
+              <li>tree-sitter</li>
             </ul>
           </article>
-          <article class="project-card">
+        </div>
+
+        <h2 class="project-group-heading">Additional projects</h2>
+        <p class="project-group-note">Earlier coursework and applied ML—shorter summaries.</p>
+        <div class="project-cards">
+          <article class="project-card" id="ids">
+            <h3>Transfer Learning and CNN-Based IDS</h3>
+            <p class="project-meta">Feb 2024 – Apr 2024</p>
+            <p class="project-desc">IoV intrusion detection with CNN ensembles and VGG/Inception/Xception transfer learning—up to <strong>99.9% F1</strong> on Car-Hacking and CICIDS2017.</p>
+            <ul class="project-skills">
+              <li>PyTorch</li>
+              <li>Transfer learning</li>
+            </ul>
+          </article>
+
+          <article class="project-card" id="e2e-ml">
             <h3>End-to-End Machine Learning Project</h3>
-            <p class="project-desc">End-to-end ML project for <strong>student performance prediction</strong>: data ingestion, transformation, model training, logging, and custom exception handling. Multiple machine learning models were trained and compared; the best-performing model was selected through experimentation and hyperparameter tuning. Structured for reproducibility and production-style workflows.</p>
+            <p class="project-desc">Student performance prediction: ingestion, feature engineering, model comparison, and logging with scikit-learn.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/mlproject" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
-              <li>Python</li>
-              <li>Scikit-Learn</li>
+              <li>Scikit-learn</li>
               <li>Pandas</li>
-              <li>NumPy</li>
             </ul>
           </article>
-          <article class="project-card" id="ids">
-            <h3>Transfer Learning and CNN-Based IDS</h3>
-            <p class="project-meta">Feb 2024 – Apr 2024</p>
-            <p class="project-desc">Transfer and ensemble learning-based <strong>Intrusion Detection System (IDS)</strong> for Internet of Vehicles (IoV). Reimplemented and validated a published framework using CNN ensembles; applied transfer learning with <strong>VGG, Inception, and Xception</strong> architectures. Achieved up to <strong>99.9% F1-score</strong> on public benchmark datasets (Car-Hacking, CICIDS2017).</p>
+
+          <article class="project-card" id="chatroom">
+            <h3>Chatroom Application</h3>
+            <p class="project-desc">Multi-client TCP chat server in Python with connection management and message routing.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Chat-Application" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
             <ul class="project-skills">
-              <li>Deep Learning</li>
-              <li>Transfer Learning</li>
-              <li>PyTorch</li>
+              <li>Python</li>
+              <li>Networking</li>
             </ul>
           </article>
-          <article class="project-card">
+
+          <article class="project-card" id="job-portal">
             <h3>Job Management Portal</h3>
-            <p class="project-desc">Full-stack <strong>Django job portal</strong> connecting job seekers and recruiters. <strong>Job seekers</strong>: secure registration, profile management, resume upload, browse listings, apply for jobs, track application status. <strong>Recruiters</strong>: post jobs with detailed descriptions, manage applications. <strong>Email notifications</strong> (SMTP) for account creation, applications, and updates. Admin panel for users, jobs, and applications. Built with Django, MySQL, and Bootstrap.</p>
+            <p class="project-desc">Django job board for seekers and recruiters with applications, email notifications, and admin workflows.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Job-Portal-Management" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
               <li>Django</li>
               <li>MySQL</li>
-              <li>SMTP</li>
             </ul>
           </article>
-          <article class="project-card">
+
+          <article class="project-card" id="school-website">
             <h3>School Website</h3>
-            <p class="project-desc">Comprehensive <strong>Django school website</strong> with academic information, admission details, and account-related functionality for students, parents, and staff. Includes user-friendly navigation and seamless access to key information. Application containerized with <strong>Docker</strong> for portable deployment.</p>
+            <p class="project-desc">Django school site with admissions and role-based access; Dockerized for deployment.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/School-Website" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
               <li>Django</li>
-              <li>MySQL</li>
               <li>Docker</li>
             </ul>
           </article>
-          <article class="project-card">
+
+          <article class="project-card" id="whatsapp-analyzer">
             <h3>WhatsApp Chat Analyzer</h3>
-            <p class="project-desc">Data analysis and visualization app for <strong>WhatsApp chat exports</strong>. Uses pandas for data cleaning and manipulation; matplotlib and seaborn for visualizations. Features include chat statistics, <strong>word clouds</strong>, message frequency patterns, and participant activity analysis. Built with Python and Streamlit for an interactive, user-friendly interface.</p>
+            <p class="project-desc">Streamlit app for chat-export stats, word clouds, and activity visualizations (pandas, matplotlib, seaborn).</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/WhatsApp_Chat_Analyser" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
             <ul class="project-skills">
-              <li>Pandas</li>
               <li>Streamlit</li>
+              <li>Pandas</li>
             </ul>
           </article>
         </div>
