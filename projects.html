@@ -79,9 +79,75 @@
             </ul>
           </article>
 
+          <article class="project-card featured" id="multi-tone-zulip">
+            <h3>Multi-Tone Communication Assistant for Zulip</h3>
+            <p class="project-meta">MLOps capstone · NYU · Chameleon Cloud</p>
+            <p class="project-desc">End-to-end MLOps stack on a two-node <strong>k3s</strong> cluster: Terraform + Ansible on OpenStack, platform services (<strong>MLflow</strong>, <strong>MinIO</strong>, Prometheus/Grafana), Sealed Secrets, scheduled backups, and <strong>Zulip</strong> via Helm. Built tone-aware draft suggestions (formal / friendly / neutral) with a Zulip bridge, classifier + generator serving, batch/retrain pipelines, and GitHub Actions promotion through staging, canary, and production aliases.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Multi-Tone-Communication-Assistant-for-Zulip---MLOps" target="_blank" rel="noopener noreferrer">Main repo</a>
+              <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Platform / IaC repo</a>
+            </p>
+            <ul class="project-skills">
+              <li>Kubernetes</li>
+              <li>Terraform</li>
+              <li>Ansible</li>
+              <li>MLflow</li>
+              <li>Helm</li>
+              <li>GitHub Actions</li>
+            </ul>
+          </article>
+
+          <article class="project-card featured" id="traffic-engineering">
+            <h3>Learning-Augmented Robust Traffic Engineering</h3>
+            <p class="project-meta">Research prototype · SDN · COMSNETS-related work</p>
+            <p class="project-desc">Research prototype for resilient <strong>software-defined networking</strong> under dynamic demand and link failures. Implements synthetic and benchmark topologies (Abilene, NSFNET), LSTM and Transformer traffic predictors, LP and robust LP multi-commodity routing, uncertainty-aware demand inflation, failure stress tests, and sweep/ablation tooling with reproducible CSV and plot outputs. Strongest advanced method: <strong>uncertainty-aware LSTM robust LP</strong>; Transformer leads nominal ML routing in tuned comparisons.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Learning-augmented-robust-traffic-engineering-for-resilient-software-defined-networks" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>PyTorch</li>
+              <li>LSTM</li>
+              <li>Transformer</li>
+              <li>Linear Programming</li>
+              <li>SDN</li>
+            </ul>
+          </article>
+
+          <article class="project-card featured" id="pixels-to-predictions">
+            <h3>Pixels to Predictions (DL Vision Challenge)</h3>
+            <p class="project-meta">Multimodal VLM · 22 documented runs</p>
+            <p class="project-desc">End-to-end experimentation for a multimodal science multiple-choice benchmark: image + question + context → 0-indexed answer. Evolved from direct <strong>SmolVLM-500M</strong> generation to binary choice scoring, then validation-calibrated ensembling under a <strong>5M</strong> trainable-parameter budget. Best single model: <strong>0.907</strong> accuracy (<code>run_16</code>); best overall weighted ensemble: <strong>0.938</strong> (<code>run_22</code>). Repository preserves per-run notebooks, scripts, metrics, and ablation ledgers.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Pixels-to-Predictions" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>SmolVLM</li>
+              <li>LoRA</li>
+              <li>Multimodal</li>
+              <li>Ensembling</li>
+              <li>PyTorch</li>
+            </ul>
+          </article>
+
+          <article class="project-card featured" id="svg-generation">
+            <h3>SVG Generation (Qwen2 LoRA)</h3>
+            <p class="project-meta">Fine-tuning · Hugging Face stack</p>
+            <p class="project-desc">LoRA fine-tuning pipeline for <strong>SVG code generation</strong> with <strong>Qwen2</strong>: training and inference notebooks, tokenizer/config artifacts, and safetensors weight index for reproducible adaptation from natural-language prompts to structured SVG output.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/SVG_Generation" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>Transformers</li>
+              <li>LoRA</li>
+              <li>Jupyter</li>
+              <li>Hugging Face</li>
+            </ul>
+          </article>
+
           <article class="project-card" id="mlops-devops">
-            <h3>MLOps / DevOps — Zulip on Chameleon</h3>
-            <p class="project-desc">Provisioned OpenStack infrastructure on Chameleon with Terraform, configured Kubernetes (k3s) with Ansible, and deployed MLflow/MinIO/Prometheus/Grafana plus Zulip via Helm with documented operational runbooks.</p>
+            <h3>MLOps Platform on Chameleon (IaC + k3s)</h3>
+            <p class="project-meta">DevOps / platform track</p>
+            <p class="project-desc">Reproducible <strong>Chameleon Cloud</strong> deployment: OpenStack VMs and floating IP via Terraform, <strong>k3s</strong> bootstrap with Ansible, HTTPS ingress on Traefik, and platform workloads—MLflow, MinIO (API + console), Prometheus, Grafana, and Zulip (Helm). Documents architecture, security notes, container/manifest matrix, and milestone runbooks for the shared MLOps capstone infrastructure.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -90,7 +156,8 @@
               <li>Ansible</li>
               <li>Kubernetes</li>
               <li>Helm</li>
-              <li>Observability</li>
+              <li>Prometheus</li>
+              <li>Grafana</li>
             </ul>
           </article>
 
