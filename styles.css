@@ -672,6 +672,7 @@ a.contact-item:hover {
 .blog-card h3 a { color: var(--color-text); text-decoration: none; }
 .blog-card h3 a:hover { color: var(--color-accent); }
 .blog-card .description { margin: 0; font-size: 0.95rem; color: var(--color-text-muted); line-height: 1.6; }
+.blog-topics { margin: var(--space-xs) 0 var(--space-sm); }
 .blog-series-note { font-size: 0.95rem; color: var(--color-text-muted); margin: 0 0 var(--space-xl); }
 
 .blog-post-header { margin-bottom: var(--space-xl); position: relative; padding-bottom: var(--space-md); }

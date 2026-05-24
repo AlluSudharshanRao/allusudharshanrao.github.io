@@ -78,13 +78,13 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 3 · Power modeling · ~6 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Power modeling · ~6 min read</p>
         <h1>Modeling inference power without hiding the spikes</h1>
       </header>
 
       <div class="blog-body">
         <p>Capacity planning for LLM serving often starts with a comfortable number: average utilization, average watts per GPU, multiply by fleet size. That number is useful for finance. It is dangerous for electrical design.</p>
-        <p>Part 1 named the GPU phases; Part 2 traced how requests become facility load and what to meter. Here we build <em>synthetic</em> power traces from traffic assumptions while keeping spikes and ramps in the model.</p>
+        <p><a href="blog-01-llm-inference-prefill-decode.html">Earlier posts</a> named the GPU phases and traced how requests become facility load. Here we build <em>synthetic</em> power traces from traffic assumptions while keeping spikes and ramps in the model.</p>
 
         <h2>Why averages fail</h2>
         <p>Imagine a cluster that reports 60% average GPU utilization and 420 W average draw per chip. Multiply by server count and you get a headline facility load. That load is real in some accounting sense. It is not what decides whether a breaker trips during a viral spike.</p>

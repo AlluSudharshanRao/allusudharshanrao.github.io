@@ -52,12 +52,12 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 10 · OpenG2G series · ~9 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Grid coordination · LLM serving · ~9 min read</p>
         <h1>Coordinating inference with the grid</h1>
       </header>
       <div class="blog-body">
 
-        <p class="blog-series-kicker">Part 10 · OpenG2G compares <strong>droop</strong>, <strong>online feedback optimization (OFO)</strong>, and <strong>PPO</strong> using inference batch size as the main actuator <a href="#refs">[1, §4]</a>.</p>
+        <p class="blog-series-kicker">OpenG2G compares <strong>droop</strong>, <strong>online feedback optimization (OFO)</strong>, and <strong>PPO</strong> using inference batch size as the main actuator <a href="#refs">[1, §4]</a>.</p>
 
         <h2>Batch size as a grid actuator</h2>
         <p>Batch size changes quickly—no redeploy, no hard stop. It moves power, throughput, and inter-token latency together <a href="#refs">[7,8]</a>. The control rule is intuitive:</p>
@@ -152,7 +152,7 @@
         </figure>
 
         <div class="blog-note">
-          <p><strong>Link to Part 1.</strong> Continuous batching already mixes prefill and decode. Grid coordination adds another scheduler objective: keep voltages in band while tokens still flow.</p>
+          <p><strong>Link to LLM serving.</strong> Continuous batching already mixes prefill and decode. Grid coordination adds another scheduler objective: keep voltages in band while tokens still flow.</p>
         </div>
 
         <h2 id="refs">References</h2>

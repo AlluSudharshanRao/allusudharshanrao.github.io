@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogs | Sudharshan Rao Allu</title>
-  <meta name="description" content="Notes on LLM serving, distributed training, and datacenter power. Sudharshan Rao Allu.">
+  <meta name="description" content="Technical blog on ML systems, backend engineering, LLM serving, training infrastructure, and datacenter topics. Sudharshan Rao Allu.">
   <link rel="canonical" href="https://allusudharshanrao.github.io/blogs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Blogs | Sudharshan Rao Allu">
-  <meta property="og:description" content="Notes on LLM serving, distributed training, and datacenter power.">
+  <meta property="og:description" content="Technical blog on ML systems, backends, LLM serving, and infrastructure.">
   <meta property="og:url" content="https://allusudharshanrao.github.io/blogs.html">
   <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blogs | Sudharshan Rao Allu">
-  <meta name="twitter:description" content="Notes on LLM serving, distributed training, and datacenter power.">
+  <meta name="twitter:description" content="Technical blog on ML systems, backends, LLM serving, and infrastructure.">
   <meta name="twitter:image" content="https://allusudharshanrao.github.io/og-image.png">
   <meta property="og:site_name" content="Sudharshan Rao Allu">
   <script type="application/ld+json">
@@ -21,7 +21,7 @@
     "@context": "https://schema.org",
     "@type": "Blog",
     "name": "Sudharshan Rao Allu — Technical Blog",
-    "description": "Notes on LLM serving, distributed training, and datacenter power.",
+    "description": "Technical blog on ML systems, backend engineering, and infrastructure.",
     "url": "https://allusudharshanrao.github.io/blogs.html",
     "author": { "@type": "Person", "name": "Sudharshan Rao Allu", "url": "https://allusudharshanrao.github.io/" },
     "publisher": { "@type": "Person", "name": "Sudharshan Rao Allu" }
@@ -58,14 +58,13 @@
       <div class="page-head-illustration" aria-hidden="true"></div>
       <div class="container">
         <h1 class="page-title">Blogs</h1>
-        <p class="section-intro">Notes on how LLM systems run, train, and draw power.</p>
+        <p class="section-intro">Technical notes on ML systems, backend engineering, and infrastructure—grouped by topic. New posts are added over time; read in any order or follow links between related articles.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container container-narrow">
-        <p class="blog-series-note">Two series on ML systems and datacenter power, written while studying at NYU. Read in order within each series, or jump to what you need.</p>
-        <h2 class="blog-series-heading has-banner">Series 1 — Serving, training, and power (Parts 1–7)</h2>
+        <h2 class="blog-series-heading has-banner">LLM serving &amp; inference</h2>
         <div class="series-banner" aria-hidden="true">
           <svg viewBox="0 0 640 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 40 Q80 20 160 38 T320 28 T480 42 T640 24" fill="none" stroke="#0d47a1" stroke-width="2" stroke-opacity="0.35"/>
@@ -77,42 +76,74 @@
         <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-01-llm-inference-prefill-decode.html">How LLM inference actually runs</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 1 · ~4 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~4 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>LLM serving</li>
+            </ul>
             <p class="description">Prefill, decode, idle, and why continuous batching stops looking like three clean phases.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-02-serving-workload-power-demand.html">From requests to facility load</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 2 · ~4 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~4 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>LLM serving</li>
+              <li>Datacenter power</li>
+            </ul>
             <p class="description">Active requests, PUE, the signal chain from scheduler to the grid, and what to meter.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-03-modeling-inference-power-traces.html">Modeling inference power without hiding the spikes</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 3 · ~6 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~6 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>LLM serving</li>
+              <li>Power modeling</li>
+            </ul>
             <p class="description">GMM states, BiGRU labels, per-server traces, and facility aggregation.</p>
           </article>
+        </div>
+
+        <h2 class="blog-series-heading has-banner">Distributed training</h2>
+        <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-04-distributed-training-parallelism.html">Distributed training in plain terms</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 4 · ~5 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~5 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Distributed training</li>
+            </ul>
             <p class="description">Bulk-synchronous steps and data, tensor, pipeline, and expert parallelism.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-05-all-reduce-gradient-exchange.html">All-reduce and why training waits on the network</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 5 · ~6 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~6 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Distributed training</li>
+            </ul>
             <p class="description">Gradient sync, ring vs tree collectives, overlap, and power during communication.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-06-synchronized-gpu-power-swings.html">Why thousands of GPUs swing power together</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 6 · ~4 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~4 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Distributed training</li>
+              <li>Datacenter power</li>
+            </ul>
             <p class="description">One GPU’s square wave becomes a facility-level oscillation when every worker shares a clock.</p>
           </article>
+        </div>
+
+        <h2 class="blog-series-heading has-banner">Datacenter power &amp; measurement</h2>
+        <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-07-time-frequency-domain-power.html">Reading datacenter power in time and frequency</a></h3>
-            <p class="meta"><time datetime="2026-05-01">May 2026</time> · Part 7 · ~6 min</p>
+            <p class="meta"><time datetime="2026-05-01">May 2026</time> · ~6 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Datacenter power</li>
+            </ul>
             <p class="description">What a waveform shows, what an FFT adds, and why both views matter for grid planning.</p>
           </article>
         </div>
 
-        <h2 class="blog-series-heading has-banner">Series 2 — OpenG2G: AI datacenter–grid coordination (Parts 8–11)</h2>
+        <h2 class="blog-series-heading has-banner">Datacenter–grid coordination</h2>
         <div class="series-banner" aria-hidden="true">
           <svg viewBox="0 0 640 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="80" cy="28" r="10" fill="none" stroke="#0d47a1" stroke-opacity="0.3"/>
@@ -123,26 +154,42 @@
             <path d="M0 44 Q160 24 320 40 T640 32" fill="none" stroke="#0d47a1" stroke-width="1.5" stroke-opacity="0.2"/>
           </svg>
         </div>
-        <p class="blog-series-note">Based on the OpenG2G simulation platform (Chung et al., arXiv:2605.05519). Continues from Part 7 into runtime flexibility, co-simulation, and control.</p>
+        <p class="blog-series-note">Posts on grid-friendly AI datacenters and the OpenG2G simulation platform (Chung et al., <a href="https://arxiv.org/abs/2605.05519" target="_blank" rel="noopener noreferrer">arXiv:2605.05519</a>). Related to <a href="blogs/blog-07-time-frequency-domain-power.html">datacenter power measurement</a>.</p>
         <div class="blog-list">
           <article class="card blog-card">
             <h3><a href="blogs/blog-08-ai-datacenter-grid-coordination.html">When AI datacenters and the grid share a control loop</a></h3>
-            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 8 · ~7 min</p>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · ~7 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Grid coordination</li>
+              <li>ML systems</li>
+            </ul>
             <p class="description">Power flexibility, voltage limits, integral violation, and why inference leads the story.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-09-openg2g-simulation-platform.html">Inside OpenG2G: simulating datacenter and grid together</a></h3>
-            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 9 · ~8 min</p>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · ~8 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Grid coordination</li>
+              <li>Simulation</li>
+            </ul>
             <p class="description">ML.ENERGY traces, OpenDSS, multi-rate loops, and feasible power range.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-10-coordinating-inference-with-the-grid.html">Coordinating inference with the grid</a></h3>
-            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 10 · ~9 min</p>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · ~9 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Grid coordination</li>
+              <li>LLM serving</li>
+            </ul>
             <p class="description">Batch size as a grid actuator; droop, OFO, and PPO; throughput vs voltage tradeoffs.</p>
           </article>
           <article class="card blog-card">
             <h3><a href="blogs/blog-11-ai-choices-grid-flexibility.html">AI model choices and grid flexibility</a></h3>
-            <p class="meta"><time datetime="2026-05-19">May 2026</time> · Part 11 · ~8 min</p>
+            <p class="meta"><time datetime="2026-05-19">May 2026</time> · ~8 min</p>
+            <ul class="skill-tags blog-topics" aria-label="Topics">
+              <li>Grid coordination</li>
+              <li>ML systems</li>
+            </ul>
             <p class="description">Model size, MoE, FP8, parallelism, and what they mean for coordination headroom.</p>
           </article>
         </div>

@@ -52,12 +52,12 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 11 · OpenG2G series · ~8 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Grid coordination · ML systems · ~8 min read</p>
         <h1>AI model choices and grid flexibility</h1>
       </header>
       <div class="blog-body">
 
-        <p class="blog-series-kicker">Part 11 · Model and deployment choices shift the <strong>feasible power range</strong>—and therefore how much grid coordination is even possible <a href="#refs">[1, §5]</a>.</p>
+        <p class="blog-series-kicker">Model and deployment choices shift the <strong>feasible power range</strong>—and therefore how much grid coordination is even possible <a href="#refs">[1, §5]</a>.</p>
 
         <h2>Same 3&nbsp;MW cap, different flexibility</h2>
         <p>OpenG2G scales replica counts so peak power hits ~3&nbsp;MW at the largest latency-safe batch. Then it varies only the AI configuration. Any change in feasible range comes from the stack, not from “buying more capacity.”</p>
@@ -112,13 +112,13 @@
         <ol>
           <li><strong>Co-design serving and interconnection.</strong> Pick model, precision, and parallelism knowing they set the MW span you can offer the utility.</li>
           <li><strong>Simulate before you promise.</strong> OpenG2G lets you replay measured inference against IEEE feeders and compare droop, OFO, and PPO on identical scenarios <a href="#refs">[1]</a>.</li>
-          <li><strong>Keep measuring.</strong> Parts 1–7 emphasized traces; OpenG2G grounds coordination in the same ML.ENERGY style data.</li>
+          <li><strong>Keep measuring.</strong> Earlier posts on inference and power traces emphasized measurement; OpenG2G grounds coordination in the same ML.ENERGY style data.</li>
         </ol>
 
         <p>Open source: <a href="https://github.com/gpu2grid/openg2g" rel="noopener noreferrer">github.com/gpu2grid/openg2g</a>.</p>
 
         <div class="blog-note">
-          <p><strong>Series close.</strong> Parts 1–7 explained what AI loads do to power. Parts 8–11 explain how measured inference and grid simulators can close the loop when operators need flexibility without shutting off chatbots.</p>
+          <p><strong>Wrapping up.</strong> Posts on serving and datacenter power explained what AI loads do to the grid. OpenG2G-style coordination shows how measured inference and grid simulators can close the loop when operators need flexibility without shutting off chatbots.</p>
         </div>
 
         <h2 id="refs">References</h2>

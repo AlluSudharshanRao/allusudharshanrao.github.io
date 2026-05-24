@@ -78,12 +78,12 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Part 4 · Distributed training · ~5 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-01">May 2026</time> · Distributed training · ~5 min read</p>
         <h1>Distributed training in plain terms</h1>
       </header>
 
       <div class="blog-body">
-        <p>Parts 1–3 focused on inference: phases on the GPU, how requests become facility load, and how to model serving power without smoothing away spikes. Training is a different beast—more synchronized, more repetitive, and often louder at the rack meter.</p>
+        <p>Earlier posts on <a href="blog-01-llm-inference-prefill-decode.html">inference</a> covered GPU phases, facility load, and serving power without smoothing away spikes. Training is a different beast—more synchronized, more repetitive, and often louder at the rack meter.</p>
         <p>This post names the bulk-synchronous loop, the main parallelism strategies, and why that rhythm shows up as structured electrical load.</p>
 
         <h2>The bulk synchronous loop</h2>

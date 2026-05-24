@@ -52,12 +52,12 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 8 · OpenG2G series · ~7 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Grid coordination · ~7 min read</p>
         <h1>When AI datacenters and the grid share a control loop</h1>
       </header>
       <div class="blog-body">
 
-        <p class="blog-series-kicker">Series extension (Parts 8–11), based on the OpenG2G paper <a href="#refs">[1]</a>. Builds on <a href="blog-07-time-frequency-domain-power.html">Part 7</a>: we measured how AI loads wiggle; here we ask what operators can do about it <em>while serving still runs</em>.</p>
+        <p class="blog-series-kicker">Based on the OpenG2G paper <a href="#refs">[1]</a>. Builds on <a href="blog-07-time-frequency-domain-power.html">datacenter power measurement</a>: we measured how AI loads wiggle; here we ask what operators can do about it <em>while serving still runs</em>.</p>
 
         <p>AI datacenters are no longer background loads on the grid. A single modern site can draw tens of megawatts; planned campuses are sized in <strong>gigawatts</strong>—on the order of 1.7× the average load of San Francisco for one 1&nbsp;GW site <a href="#refs">[1]</a>. That scale slows interconnection, pushes new transmission, and makes voltage and reliability studies harder. One response gaining traction is <strong>runtime power flexibility</strong>: the datacenter agrees to raise or lower draw on short notice by turning software knobs, instead of waiting years for new wires.</p>
 
@@ -123,7 +123,7 @@
         </figure>
 
         <div class="blog-note">
-          <p><strong>Bridge from Part 7.</strong> Your FFT and ramp analysis tells you <em>which frequencies</em> the load excites. Integral violation tells you whether the grid stayed within voltage limits while you moved that load. Both belong in the same story.</p>
+          <p><strong>Bridge from power measurement.</strong> Your FFT and ramp analysis tells you <em>which frequencies</em> the load excites. Integral violation tells you whether the grid stayed within voltage limits while you moved that load. Both belong in the same story.</p>
         </div>
 
         <p>Next: how OpenG2G simulates this loop with real inference measurements and a distribution-grid backend.</p>

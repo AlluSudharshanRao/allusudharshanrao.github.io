@@ -52,12 +52,12 @@
     <article class="container container-narrow">
       <p class="blog-back"><a href="../blogs.html">← All blogs</a></p>
       <header class="blog-post-header">
-        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Part 9 · OpenG2G series · ~8 min read</p>
+        <p class="blog-meta"><time datetime="2026-05-19">May 2026</time> · Grid coordination · Simulation · ~8 min read</p>
         <h1>Inside OpenG2G: simulating datacenter and grid together</h1>
       </header>
       <div class="blog-body">
 
-        <p class="blog-series-kicker">Part 9 · OpenG2G co-simulates a <strong>datacenter backend</strong>, a <strong>grid backend</strong>, and pluggable <strong>controllers</strong> on a multi-rate loop <a href="#refs">[1]</a>.</p>
+        <p class="blog-series-kicker">OpenG2G co-simulates a <strong>datacenter backend</strong>, a <strong>grid backend</strong>, and pluggable <strong>controllers</strong> on a multi-rate loop <a href="#refs">[1]</a>.</p>
 
         <h2>Why one simulator is not enough</h2>
         <p>Grid papers rarely run vLLM. ML papers rarely run OpenDSS. OpenG2G stitches both: measured inference behavior drives datacenter power, while a distribution feeder simulator returns voltages and violations. Controllers sit in the middle with a small Python API—swap a policy, a model mix, or an IEEE test feeder without rewriting the loop.</p>
