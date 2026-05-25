@@ -111,6 +111,7 @@
       <div class="container hero-inner">
         <div class="hero-content">
           <p class="hero-badge">Open to work · Spring 2027 intern · Full-time June 2027</p>
+          <p class="hero-kicker">ML systems, backend engineering, and research-driven infrastructure</p>
           <h1 class="hero-name">Sudharshan Rao Allu</h1>
           <p class="hero-tagline">ML Systems &amp; Backend Engineer</p>
           <p class="hero-subtitle">MS Computer Engineering, NYU Tandon · Grad May 2027</p>
@@ -129,8 +130,27 @@
             <span class="hero-tag-pill">PyTorch</span>
             <span class="hero-tag-pill">Docker</span>
           </div>
+          <div class="hero-proof-grid" aria-label="Portfolio highlights">
+            <article class="hero-proof-card">
+              <strong>149 commits</strong>
+              <span>Zulip MLOps capstone with infra, serving, and release flow</span>
+            </article>
+            <article class="hero-proof-card">
+              <strong>2 IEEE papers</strong>
+              <span>Networking and medical imaging research shipped into publications</span>
+            </article>
+            <article class="hero-proof-card">
+              <strong>NYU research</strong>
+              <span>Current work on grid-friendly AI datacenters and systems behavior</span>
+            </article>
+          </div>
         </div>
         <figure class="hero-photo-wrap">
+          <div class="hero-photo-frame" aria-hidden="true">
+            <span>ML systems</span>
+            <span>backend APIs</span>
+            <span>research</span>
+          </div>
           <img
             src="assets/profile-photo.jpeg"
             alt="Sudharshan Rao Allu — ML Systems and Backend Engineer, NYU Tandon School of Engineering"
@@ -286,34 +306,41 @@
         <h2 class="section-title has-icon section-title--projects">Selected projects</h2>
         <p class="section-intro">End-to-end ML systems and backend services. <a href="projects.html">View all projects →</a></p>
         <div class="project-cards project-cards-preview">
-          <article class="project-card">
+          <article class="project-card project-card--spotlight">
+            <p class="project-eyebrow">Flagship MLOps platform</p>
             <h3><a href="projects.html#multi-tone-zulip">Multi-Tone Zulip MLOps</a></h3>
             <p class="project-meta">Kubernetes · MLflow · serving</p>
             <p class="project-desc">Full capstone stack on k3s with retrain automation and canary/prod model promotion.</p>
+            <p class="project-proof">Terraform + Ansible + k3s + GitHub Actions with staged model rollout.</p>
             <ul class="project-skills">
               <li>MLOps</li>
               <li>Kubernetes</li>
             </ul>
           </article>
-          <article class="project-card">
+          <article class="project-card project-card--spotlight">
+            <p class="project-eyebrow">Developer tooling</p>
             <h3><a href="projects.html#ambient-code">Ambient Code</a></h3>
             <p class="project-meta">VS Code extension · Python services</p>
             <p class="project-desc">Developer tooling with editor event collection, a persistent codebase model, and context-aware LLM insights.</p>
+            <p class="project-proof">Multi-layer design with test-heavy Python services and persistent local context.</p>
             <ul class="project-skills">
               <li>TypeScript</li>
               <li>Python</li>
             </ul>
           </article>
-          <article class="project-card">
+          <article class="project-card project-card--spotlight">
+            <p class="project-eyebrow">Research systems</p>
             <h3><a href="projects.html#traffic-engineering">Traffic Engineering Research</a></h3>
             <p class="project-meta">SDN · optimization · forecasting</p>
             <p class="project-desc">Research prototype combining demand prediction, LP routing, and failure-aware evaluation on benchmark network topologies.</p>
+            <p class="project-proof">Forecasting + optimization + robustness analysis across benchmark topologies.</p>
             <ul class="project-skills">
               <li>PyTorch</li>
               <li>Optimization</li>
             </ul>
           </article>
           <article class="project-card">
+            <p class="project-eyebrow">Multimodal modeling</p>
             <h3><a href="projects.html#pixels-to-predictions">Pixels to Predictions</a></h3>
             <p class="project-meta">SmolVLM · LoRA · ensembles</p>
             <p class="project-desc">Multimodal science QA with documented ablations, binary choice scoring, and a validation-calibrated ensemble reaching 0.938 accuracy.</p>
@@ -323,6 +350,7 @@
             </ul>
           </article>
           <article class="project-card">
+            <p class="project-eyebrow">Applied ML platform</p>
             <h3><a href="projects.html#mlops">Recommendation System + MLOps</a></h3>
             <p class="project-meta">MLflow · FastAPI · CI</p>
             <p class="project-desc">ML pipeline with tracking, serving, and CI using MLflow, DVC, FastAPI, and Docker.</p>

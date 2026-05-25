@@ -1,10 +1,13 @@
 :root {
   --color-bg: #faf9f7;
   --color-surface: #fff;
+  --color-surface-alt: #f4f6f8;
   --color-text: #1a1a1a;
   --color-text-muted: #4a4a4a;
   --color-accent: #0d47a1;
   --color-accent-light: #1565c0;
+  --color-accent-deep: #082a66;
+  --color-gold: #b88a2f;
   --color-border: #e0ddd9;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -41,6 +44,8 @@ body {
   background-size: auto, auto, 48px 48px;
   background-attachment: fixed;
 }
+
+a { text-underline-offset: 0.18em; }
 
 /* Keyboard accessibility */
 .skip-link {
@@ -206,6 +211,14 @@ body.page-cv .nav-links a[href="cv.html"] {
   .hero-graphic { display: none; }
 }
 .hero-content { text-align: center; max-width: 640px; }
+.hero-kicker {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
 .hero-badge {
   display: inline-block;
   font-size: 0.8rem;
@@ -223,16 +236,17 @@ body.page-cv .nav-links a[href="cv.html"] {
 }
 .hero-name {
   font-family: var(--font-serif);
-  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-size: clamp(2.6rem, 6vw, 4rem);
   font-weight: 600;
   margin: 0 0 var(--space-sm);
   letter-spacing: 0.02em;
+  line-height: 1.02;
 }
 .hero-tagline {
-  font-size: 1.2rem;
-  color: var(--color-text);
+  font-size: 1.28rem;
+  color: var(--color-accent-deep);
   margin: 0 0 var(--space-xs);
-  font-weight: 500;
+  font-weight: 600;
 }
 .hero-subtitle, .hero-location {
   font-size: 1rem;
@@ -258,6 +272,12 @@ body.page-cv .nav-links a[href="cv.html"] {
 .hero-with-photo .hero-content {
   text-align: left;
   max-width: none;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(13, 71, 161, 0.1);
+  border-radius: 28px;
+  padding: clamp(1.4rem, 2.4vw, 2.1rem);
+  box-shadow: 0 22px 50px rgba(9, 31, 73, 0.08);
+  backdrop-filter: blur(10px);
 }
 .hero-with-photo .hero-cta {
   justify-content: flex-start;
@@ -271,6 +291,38 @@ body.page-cv .nav-links a[href="cv.html"] {
 .hero-photo-wrap {
   margin: 0;
   justify-self: center;
+  position: relative;
+  padding: 1rem;
+}
+.hero-photo-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  border: 1px solid rgba(13, 71, 161, 0.12);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.5), rgba(232, 238, 245, 0.24)),
+    radial-gradient(circle at top right, rgba(13, 71, 161, 0.16), transparent 40%);
+  box-shadow: 0 20px 45px rgba(9, 31, 73, 0.08);
+}
+.hero-photo-frame span {
+  position: absolute;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(13, 71, 161, 0.1);
+  color: var(--color-accent-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(9, 31, 73, 0.08);
+}
+.hero-photo-frame span:nth-child(1) { top: 1rem; right: 1rem; }
+.hero-photo-frame span:nth-child(2) { left: 0.8rem; bottom: 4.2rem; }
+.hero-photo-frame span:nth-child(3) { right: 1.25rem; bottom: 1rem; }
+.hero-photo-wrap > * {
+  position: relative;
+  z-index: 1;
 }
 .hero-photo {
   display: block;
@@ -316,6 +368,31 @@ body.page-cv .nav-links a[href="cv.html"] {
   gap: var(--space-md);
   justify-content: center;
   flex-wrap: wrap;
+}
+.hero-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: var(--space-xl);
+}
+.hero-proof-card {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,246,248,0.88));
+  border: 1px solid rgba(13, 71, 161, 0.1);
+  box-shadow: 0 14px 28px rgba(9, 31, 73, 0.06);
+}
+.hero-proof-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  color: var(--color-accent-deep);
+}
+.hero-proof-card span {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
 }
 
 .highlights {
@@ -535,6 +612,7 @@ body.page-cv .nav-links a[href="cv.html"] {
 .section .timeline + .project-group-heading { margin-top: var(--space-2xl); }
 
 .project-cards { display: grid; gap: var(--space-lg); }
+.project-cards-featured { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .project-card {
   position: relative;
   background: var(--color-surface);
@@ -570,6 +648,17 @@ body.page-cv .nav-links a[href="cv.html"] {
 }
 .project-card.featured::before { transform: scaleX(1); opacity: 0.9; }
 .project-card.featured h3 { font-size: 1.25rem; }
+.project-card--spotlight {
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(244,246,248,0.7) 100%);
+}
+.project-eyebrow {
+  margin: 0 0 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
 .project-card h3 {
   display: flex;
   align-items: flex-start;
@@ -598,6 +687,16 @@ body.page-cv .nav-links a[href="cv.html"] {
   font-size: 0.95rem;
   color: var(--color-text-muted);
   line-height: 1.6;
+}
+.project-proof {
+  margin: -0.15rem 0 var(--space-md);
+  padding: 0.7rem 0.85rem;
+  border-radius: 14px;
+  background: rgba(13, 71, 161, 0.06);
+  border: 1px solid rgba(13, 71, 161, 0.1);
+  color: var(--color-accent-deep);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 .project-skills {
   list-style: none;
@@ -1204,7 +1303,7 @@ body.page-cv .page-head-illustration {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-accent);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(13, 71, 161, 0.14);
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
@@ -1219,8 +1318,9 @@ body.page-cv .page-head-illustration {
 .focus-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
+  border-radius: 18px;
+  padding: 1.1rem;
+  box-shadow: 0 12px 26px rgba(9, 31, 73, 0.05);
 }
 .focus-card h3 {
   font-size: 1.05rem;
@@ -1243,10 +1343,12 @@ body.page-cv .page-head-illustration {
 @media (max-width: 640px) {
   .focus-grid { grid-template-columns: 1fr; }
   .hero-tags { max-width: 100%; }
+  .hero-proof-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
   .page-head .page-head-illustration { display: none; }
+  .project-cards-featured { grid-template-columns: 1fr; }
 }
 
 @keyframes hero-drift {
