@@ -107,59 +107,63 @@
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="hero hero-compact hero-with-photo" id="hero">
-      <div class="container hero-inner">
-        <figure class="hero-photo-wrap">
-          <img
-            src="assets/profile-photo.jpeg"
-            alt="Sudharshan Rao Allu — ML Systems and Backend Engineer, NYU Tandon School of Engineering"
-            class="hero-photo"
-            width="280"
-            height="350"
-            decoding="async"
-            fetchpriority="high"
-          >
-        </figure>
-        <div class="hero-content">
+    <section class="section intro-section" id="hero">
+      <div class="container container-intro">
+        <header class="intro-header">
           <p class="hero-badge">Open to work · Spring 2027 intern · Full-time June 2027</p>
           <h1 class="hero-name">Sudharshan Rao Allu</h1>
           <p class="hero-tagline">ML Systems &amp; Backend Engineer</p>
           <p class="hero-subtitle">MS Computer Engineering, NYU Tandon · Grad May 2027</p>
-          <p class="hero-location">New York, NY · ML systems · MLOps · LLM serving &amp; RAG · production backends</p>
-          <div class="hero-cta">
-            <a href="projects.html" class="btn btn-primary">View projects</a>
-            <a href="cv.html" class="btn btn-secondary">CV</a>
-            <a href="#contact" class="btn btn-secondary">Contact</a>
-          </div>
-          <div class="hero-tags" aria-hidden="true">
-            <span class="hero-tag-pill">ML Systems</span>
-            <span class="hero-tag-pill">MLOps</span>
-            <span class="hero-tag-pill">FastAPI</span>
-            <span class="hero-tag-pill">Kubernetes</span>
-            <span class="hero-tag-pill">LLM / RAG</span>
-            <span class="hero-tag-pill">PyTorch</span>
-            <span class="hero-tag-pill">Docker</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        </header>
 
-    <div class="section-wave" role="presentation" aria-hidden="true"></div>
+        <div class="intro-layout">
+          <div class="intro-text about-content">
+            <p class="lead">I'm an MS <strong>Computer Engineering</strong> student at NYU Tandon (<strong>graduating May 2027</strong>). I build <strong>end-to-end ML systems</strong> and <strong>production backends</strong>—from training and experiment tracking through model serving on <strong>Kubernetes</strong>, observability, and <strong>REST APIs</strong> teams can ship and operate.</p>
+            <p>I'm currently a <a href="experience.html#nyu-grid-datacenter-research">Research Intern</a> on grid-friendly AI data centers (GPU workload power, scheduling, and control). I'm <strong>open to work</strong> for <strong>Spring 2027 internships</strong> and <strong>full-time</strong> <strong>ML Systems</strong> and <strong>Backend Engineering</strong> roles starting <strong>June 2027</strong>.</p>
+            <p><strong>What I build</strong></p>
+            <ul class="pub-list">
+              <li><strong>ML systems (end-to-end):</strong> data → training → registry (<strong>MLflow</strong>, DVC) → inference → deploy &amp; monitor; MLOps capstone on Chameleon with retrain automation and canary/prod promotion on <strong>k3s</strong> (<a href="projects.html#multi-tone-zulip">Multi-Tone Zulip</a>).</li>
+              <li><strong>LLM serving:</strong> production <strong>RAG</strong> (hybrid retrieval, citations, <a href="projects.html#rag">project</a>), LoRA fine-tuning, multimodal VLM pipelines (<a href="projects.html#pixels-to-predictions">Pixels to Predictions</a>).</li>
+              <li><strong>Backends:</strong> <strong>FastAPI</strong> / <strong>Django</strong>, Docker, auth, caching, rate limits, and tested APIs—plus hackathon stacks shipped on short timelines (<a href="hackathons.html">hackathons</a>).</li>
+              <li><strong>Platforms:</strong> Terraform, Ansible, Helm, Prometheus/Grafana for reproducible ML infrastructure (<a href="projects.html#mlops-devops">platform repo</a>).</li>
+              <li><strong>Writing:</strong> <a href="blogs.html">technical blog</a> on ML systems, backend engineering, LLM serving, training infrastructure, and related systems topics.</li>
+            </ul>
+            <div class="hero-cta">
+              <a href="projects.html" class="btn btn-primary">View projects</a>
+              <a href="cv.html" class="btn btn-secondary">CV</a>
+              <a href="#contact" class="btn btn-secondary">Contact</a>
+            </div>
+            <div class="hero-tags" aria-hidden="true">
+              <span class="hero-tag-pill">ML Systems</span>
+              <span class="hero-tag-pill">MLOps</span>
+              <span class="hero-tag-pill">FastAPI</span>
+              <span class="hero-tag-pill">Kubernetes</span>
+              <span class="hero-tag-pill">LLM / RAG</span>
+              <span class="hero-tag-pill">PyTorch</span>
+              <span class="hero-tag-pill">Docker</span>
+            </div>
+          </div>
 
-    <section class="section">
-      <div class="container container-narrow">
-        <h2 class="section-title has-icon section-title--about">About</h2>
-        <div class="about-content">
-          <p class="lead">I'm <strong>Sudharshan Rao Allu</strong>, an MS <strong>Computer Engineering</strong> student at NYU Tandon (<strong>graduating May 2027</strong>). I build <strong>end-to-end ML systems</strong> and <strong>production backends</strong>—from training and experiment tracking through model serving on <strong>Kubernetes</strong>, observability, and <strong>REST APIs</strong> teams can ship and operate.</p>
-          <p>I'm currently a <a href="experience.html#nyu-grid-datacenter-research">Research Intern</a> on grid-friendly AI data centers (GPU workload power, scheduling, and control). I'm <strong>open to work</strong> for <strong>Spring 2027 internships</strong> and <strong>full-time</strong> <strong>ML Systems</strong> and <strong>Backend Engineering</strong> roles starting <strong>June 2027</strong>.</p>
-          <p><strong>What I build</strong></p>
-          <ul class="pub-list">
-            <li><strong>ML systems (end-to-end):</strong> data → training → registry (<strong>MLflow</strong>, DVC) → inference → deploy &amp; monitor; MLOps capstone on Chameleon with retrain automation and canary/prod promotion on <strong>k3s</strong> (<a href="projects.html#multi-tone-zulip">Multi-Tone Zulip</a>).</li>
-            <li><strong>LLM serving:</strong> production <strong>RAG</strong> (hybrid retrieval, citations, <a href="https://smart-rag-assistant.streamlit.app/" target="_blank" rel="noopener noreferrer">live demo</a>), LoRA fine-tuning, multimodal VLM pipelines (<a href="projects.html#pixels-to-predictions">Pixels to Predictions</a>).</li>
-            <li><strong>Backends:</strong> <strong>FastAPI</strong> / <strong>Django</strong>, Docker, auth, caching, rate limits, and tested APIs—plus hackathon stacks shipped on short timelines (<a href="hackathons.html">hackathons</a>).</li>
-            <li><strong>Platforms:</strong> Terraform, Ansible, Helm, Prometheus/Grafana for reproducible ML infrastructure (<a href="projects.html#mlops-devops">platform repo</a>).</li>
-            <li><strong>Writing:</strong> <a href="blogs.html">technical blog</a> on ML systems, backend engineering, LLM serving, training infrastructure, and related systems topics.</li>
-          </ul>
+          <aside class="intro-aside" aria-label="Profile photo and contact">
+            <figure class="profile-photo-wrap">
+              <img
+                src="assets/profile-photo.jpeg"
+                alt="Sudharshan Rao Allu — ML Systems and Backend Engineer, NYU Tandon School of Engineering"
+                class="profile-photo"
+                width="260"
+                height="325"
+                decoding="async"
+                fetchpriority="high"
+              >
+            </figure>
+            <div class="profile-aside-meta">
+              <p>New York, NY</p>
+              <p>NYU Tandon School of Engineering</p>
+              <p><a href="mailto:sa9876@nyu.edu">sa9876@nyu.edu</a></p>
+              <p><a href="https://www.linkedin.com/in/sudharshanraoallu" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+              <p><a href="https://github.com/AlluSudharshanRao" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
