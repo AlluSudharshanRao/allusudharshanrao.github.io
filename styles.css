@@ -248,7 +248,7 @@ body.page-cv .nav-links a[href="cv.html"] {
 
 .hero-inner {
   display: grid;
-  grid-template-columns: minmax(200px, 280px) 1fr;
+  grid-template-columns: 1fr minmax(200px, 280px);
   gap: var(--space-2xl);
   align-items: center;
   max-width: 960px;
@@ -290,6 +290,9 @@ body.page-cv .nav-links a[href="cv.html"] {
     grid-template-columns: 1fr;
     gap: var(--space-lg);
     text-align: center;
+  }
+  .hero-photo-wrap {
+    order: -1;
   }
   .hero-with-photo .hero-content {
     text-align: center;
