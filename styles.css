@@ -1385,6 +1385,83 @@ a.contact-item:hover {
   max-width: 52ch;
 }
 
+.project-availability {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin: var(--space-sm) 0 0;
+  max-width: 58ch;
+}
+
+.project-jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-xl);
+  padding: 0;
+  list-style: none;
+}
+
+.project-jump-nav a {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: rgba(73, 102, 168, 0.08);
+  border: 1px solid rgba(73, 102, 168, 0.2);
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.project-jump-nav a:hover {
+  background: rgba(73, 102, 168, 0.14);
+  text-decoration: none;
+}
+
+.project-subgroup-heading {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: var(--space-xl) 0 var(--space-xs);
+  color: var(--color-text);
+}
+
+.project-subgroup-note {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-md);
+  max-width: 58ch;
+}
+
+.project-archive {
+  margin-top: var(--space-lg);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.project-archive summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.project-archive summary:hover { text-decoration: underline; }
+
+.project-archive .project-cards {
+  margin-top: var(--space-lg);
+}
+
+.blog-start-here {
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(73, 102, 168, 0.15);
+}
+
+.blog-card--featured {
+  border-color: rgba(13, 71, 161, 0.22);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(232, 238, 245, 0.45));
+}
+
 .blog-series-kicker {
   font-size: 0.95rem;
   color: var(--color-text-muted);
@@ -1475,6 +1552,10 @@ a.contact-item:hover {
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z'/%3E%3C/svg%3E");
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z'/%3E%3C/svg%3E");
 }
+.section-title--blogs::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d47a1'%3E%3Cpath d='M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3h4v2h-4V6zm0 4h8v2h-8v-2zm0 4h8v2h-8v-2zm-6-8h4v10H6V6z'/%3E%3C/svg%3E");
+}
+
 .section-title--projects::before {
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M4 6h6V4H4v2zm10 0h6V4h-6v2zM4 13h6v-2H4v2zm10 0h6v-2h-6v2zM4 20h6v-2H4v2zm10 0h6v-2h-6v2z'/%3E%3C/svg%3E");
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M4 6h6V4H4v2zm10 0h6V4h-6v2zM4 13h6v-2H4v2zm10 0h6v-2h-6v2zM4 20h6v-2H4v2zm10 0h6v-2h-6v2z'/%3E%3C/svg%3E");

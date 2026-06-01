@@ -20,6 +20,20 @@
     ]
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "ML Systems and Backend Projects",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Multi-Tone Communication Assistant for Zulip", "url": "https://allusudharshanrao.github.io/projects.html#multi-tone-zulip" },
+      { "@type": "ListItem", "position": 2, "name": "Ambient Code", "url": "https://allusudharshanrao.github.io/projects.html#ambient-code" },
+      { "@type": "ListItem", "position": 3, "name": "Learning-Augmented Robust Traffic Engineering", "url": "https://allusudharshanrao.github.io/projects.html#traffic-engineering" },
+      { "@type": "ListItem", "position": 4, "name": "Pixels to Predictions", "url": "https://allusudharshanrao.github.io/projects.html#pixels-to-predictions" },
+      { "@type": "ListItem", "position": 5, "name": "Real-Time Recommendation System with MLOps", "url": "https://allusudharshanrao.github.io/projects.html#mlops" }
+    ]
+  }
+  </script>
   <meta property="og:url" content="https://allusudharshanrao.github.io/projects.html">
   <meta property="og:site_name" content="Sudharshan Rao Allu">
   <meta property="og:image" content="https://allusudharshanrao.github.io/og-image.png">
@@ -60,8 +74,9 @@
         <div class="page-head-shell">
           <div class="page-head-copy">
             <p class="page-head-kicker">Portfolio</p>
-        <h1 class="page-title">ML Systems &amp; Backend Projects</h1>
-        <p class="section-intro">End-to-end <strong>ML systems</strong> (training → registry → serving on Kubernetes) and <strong>backend services</strong> (REST APIs, auth, caching, observability). Portfolio of an <strong>ML Systems &amp; Backend Engineer</strong> — grouped by focus.</p>
+            <h1 class="page-title">ML Systems &amp; Backend Projects</h1>
+            <p class="section-intro">End-to-end <strong>ML systems</strong> (training → registry → serving on Kubernetes) and <strong>backend services</strong> (REST APIs, auth, caching, observability). Portfolio of an <strong>ML Systems &amp; Backend Engineer</strong> — grouped by focus.</p>
+            <p class="project-availability">Open to <strong>Spring 2027 internships</strong> and <strong>full-time ML Systems / Backend roles</strong> from <strong>June 2027</strong> (MS grad May 2027).</p>
             <div class="page-head-badges" aria-label="Project themes">
               <span class="page-head-badge">MLOps platforms</span>
               <span class="page-head-badge">LLM applications</span>
@@ -84,14 +99,24 @@
 
     <section class="section">
       <div class="container">
-        <h2 class="project-group-heading">ML systems (end-to-end)</h2>
-        <p class="project-group-note">Training, experiment tracking, inference services, and deployment automation.</p>
+        <nav aria-label="Jump to project sections">
+          <ul class="project-jump-nav">
+            <li><a href="#ml-systems">MLOps</a></li>
+            <li><a href="#rag">LLM / RAG</a></li>
+            <li><a href="#nyu-grid-research">Research</a></li>
+            <li><a href="#backend-platform">Backend</a></li>
+            <li><a href="#earlier-projects">Earlier</a></li>
+          </ul>
+        </nav>
+
+        <h2 class="project-group-heading" id="ml-systems">ML systems (end-to-end)</h2>
+        <p class="project-group-note">Training, experiment tracking, inference services, and deployment automation. The <a href="index.html#selected-projects">home page</a> spotlights capstone + tooling; this section is the full list.</p>
         <div class="project-cards project-cards-featured">
           <article class="project-card featured" id="multi-tone-zulip">
             <p class="project-eyebrow">Flagship MLOps platform</p>
             <h3>Multi-Tone Communication Assistant for Zulip</h3>
             <p class="project-meta">MLOps capstone · NYU · Chameleon Cloud</p>
-            <p class="project-desc">Full MLOps stack on <strong>k3s</strong>: Terraform/Ansible, MLflow, MinIO, tone classifier + generator serving, Zulip bridge, batch/retrain pipelines, and GitHub Actions promotion through staging, canary, and production.</p>
+            <p class="project-desc">Capstone-scale platform (not a single-model lab): full MLOps stack on <strong>k3s</strong> with Terraform/Ansible, MLflow, MinIO, tone classifier + generator serving, Zulip bridge, batch/retrain pipelines, and GitHub Actions promotion through staging, canary, and production.</p>
             <p class="project-proof">Infrastructure, serving, observability, retraining workflow, and release automation in one public repo set.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Multi-Tone-Communication-Assistant-for-Zulip---MLOps" target="_blank" rel="noopener noreferrer">Main repo</a>
@@ -131,6 +156,7 @@
             <p class="project-proof">Forecasting, linear programming, scenario analysis, and report-ready experiment outputs.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Learning-augmented-robust-traffic-engineering-for-resilient-software-defined-networks" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="publications.html#comsnets-2025">Related publication</a>
             </p>
             <ul class="project-skills">
               <li>PyTorch</li>
@@ -160,8 +186,9 @@
           <article class="project-card featured" id="mlops">
             <p class="project-eyebrow">Applied ML platform</p>
             <h3>Real-Time Recommendation System with MLOps</h3>
-            <p class="project-meta">Sep 2025 – Dec 2025</p>
-            <p class="project-desc">ML pipeline with tracking, serving, and CI: MLflow/DVC, hyperparameter tuning (R² −0.26 → 0.28), and <strong>FastAPI</strong> + Docker inference APIs.</p>
+            <p class="project-meta">Sep 2025 – Dec 2025 · NYU</p>
+            <p class="project-desc">Focused ML lifecycle lab—complements the <a href="#multi-tone-zulip">Multi-Tone capstone</a>, not a duplicate platform: MLflow/DVC tracking, hyperparameter tuning (R² −0.26 → 0.28), and <strong>FastAPI</strong> + Docker inference APIs.</p>
+            <p class="project-proof">End-to-end tracking, tuning, and containerized serving without full cluster promotion workflows.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/Real-Time-Recommendation-System-with-Full-ML-Lifecycle" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -176,7 +203,12 @@
           <article class="project-card" id="llm-finetune-serving">
             <h3>LLM Fine-Tuning &amp; Serving Workflow</h3>
             <p class="project-meta">LoRA · quantization · serving</p>
-            <p class="project-desc">Qwen2-1.5B-Instruct with <strong>LoRA</strong> and <strong>4-bit quantization</strong>, config-driven experiments, and a structured inference/serving workflow.</p>
+            <p class="project-desc">Qwen2-1.5B-Instruct with <strong>LoRA</strong> and <strong>4-bit quantization</strong>, config-driven experiments, and a structured inference/serving workflow (coursework; no single public monorepo).</p>
+            <p class="project-proof">Config-based experiment tracking plus an end-to-end serving path aligned with production LLM deployment patterns.</p>
+            <p class="project-links">
+              <a href="projects.html#svg-generation">Related: SVG LoRA pipeline</a>
+              <a href="projects.html#rag">Related: RAG serving stack</a>
+            </p>
             <ul class="project-skills">
               <li>PEFT (LoRA/QLoRA)</li>
               <li>Transformers</li>
@@ -188,6 +220,7 @@
             <h3>SVG Generation (Qwen2 LoRA)</h3>
             <p class="project-meta">Fine-tuning · Hugging Face</p>
             <p class="project-desc">LoRA pipeline for <strong>SVG code generation</strong> with Qwen2—training/inference notebooks, tokenizer config, and reproducible weight artifacts.</p>
+            <p class="project-proof">Public repo with training notebooks, tokenizer setup, and exportable LoRA weights.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/SVG_Generation" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -201,7 +234,8 @@
           <article class="project-card" id="rag">
             <h3>RAG-Powered Document Assistant (Smart RAG)</h3>
             <p class="project-meta">Sep 2025 – Dec 2025</p>
-            <p class="project-desc">Containerized document Q&amp;A app over PDF/DOCX/TXT/MD with ChromaDB, hybrid retrieval (semantic + BM25), citations, multi-turn chat, and analytics. Streamlit + Docker.</p>
+            <p class="project-desc">Containerized retrieval stack over PDF/DOCX/TXT/MD: ChromaDB, hybrid retrieval (semantic + BM25), citations, and multi-turn chat. <strong>Streamlit</strong> demo UI; core logic is Python services + Docker (not a separate public FastAPI deployment).</p>
+            <p class="project-proof">Hybrid retrieval and Dockerized pipeline; benchmarked with RAGAS-style faithfulness and context precision targets.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/smart-rag-assistant" target="_blank" rel="noopener noreferrer">Code</a>
             </p>
@@ -214,15 +248,36 @@
           </article>
         </div>
 
-        <h2 class="project-group-heading">Backend &amp; platform engineering</h2>
+        <div class="project-cards">
+          <article class="project-card" id="nyu-grid-research">
+            <p class="project-eyebrow">Research in progress</p>
+            <h3>Grid-friendly AI datacenter co-design (NYU Tandon)</h3>
+            <p class="project-meta">May 2026 – Present · Research Intern · ECE</p>
+            <p class="project-desc">Algorithm co-design for <strong>grid-friendly AI data centers</strong>—workload shaping, GPU power behavior, and datacenter–grid coordination. Not a single public code drop; documented on <a href="experience.html#nyu-grid-datacenter-research">Experience</a> and the <a href="blogs.html">technical blog</a>.</p>
+            <p class="project-proof">Connects ML systems scheduling and power traces to infrastructure research (see blog series on inference power and grid coordination).</p>
+            <p class="project-links">
+              <a href="experience.html#nyu-grid-datacenter-research">Experience</a>
+              <a href="blogs/blog-08-ai-datacenter-grid-coordination.html">Blog: datacenter–grid</a>
+            </p>
+            <ul class="project-skills">
+              <li>GPU workloads</li>
+              <li>ML systems</li>
+              <li>Power systems</li>
+            </ul>
+          </article>
+        </div>
+
+        <h2 class="project-group-heading" id="backend-platform">Backend &amp; platform engineering</h2>
         <p class="project-group-note">REST APIs, auth, caching, and infrastructure that ML services run on.</p>
         <div class="project-cards">
           <article class="project-card" id="mlops-devops">
             <h3>MLOps Platform on Chameleon (IaC + k3s)</h3>
             <p class="project-meta">Terraform · Ansible · Kubernetes</p>
-            <p class="project-desc">Reproducible Chameleon deployment: OpenStack + floating IP, k3s bootstrap, Traefik ingress, MLflow, MinIO, Prometheus/Grafana, and Zulip via Helm—with architecture docs and manifest matrix.</p>
+            <p class="project-desc">Platform layer for the <a href="#multi-tone-zulip">Multi-Tone capstone</a>—reproducible Chameleon deployment: OpenStack + floating IP, k3s bootstrap, Traefik ingress, MLflow, MinIO, Prometheus/Grafana, and Zulip via Helm, with architecture docs and a manifest matrix.</p>
+            <p class="project-proof">Same IaC repo linked from the capstone; use this card for infra-only browsing.</p>
             <p class="project-links">
               <a href="https://github.com/AlluSudharshanRao/MLOps_DevOps" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="#multi-tone-zulip">Capstone app</a>
             </p>
             <ul class="project-skills">
               <li>Terraform</li>
@@ -258,79 +313,68 @@
           </article>
         </div>
 
-        <h2 class="project-group-heading">Additional projects</h2>
-        <p class="project-group-note">Earlier coursework and applied ML—shorter summaries.</p>
-        <div class="project-cards">
-          <article class="project-card" id="ids">
-            <h3>Transfer Learning and CNN-Based IDS</h3>
-            <p class="project-meta">Feb 2024 – Apr 2024</p>
-            <p class="project-desc">IoV intrusion detection with CNN ensembles and VGG/Inception/Xception transfer learning—up to <strong>99.9% F1</strong> on Car-Hacking and CICIDS2017.</p>
-            <ul class="project-skills">
-              <li>PyTorch</li>
-              <li>Transfer learning</li>
-            </ul>
-          </article>
+        <details class="project-archive" id="earlier-projects">
+          <summary>Earlier coursework and applied ML</summary>
+          <div class="project-cards">
+            <article class="project-card" id="ids">
+              <h3>Transfer Learning and CNN-Based IDS</h3>
+              <p class="project-meta">Feb 2024 – Apr 2024</p>
+              <p class="project-desc">IoV intrusion detection with CNN ensembles and VGG/Inception/Xception transfer learning—up to <strong>99.9% F1</strong> on Car-Hacking and CICIDS2017.</p>
+              <ul class="project-skills">
+                <li>PyTorch</li>
+                <li>Transfer learning</li>
+              </ul>
+            </article>
 
-          <article class="project-card" id="e2e-ml">
-            <h3>End-to-End Machine Learning Project</h3>
-            <p class="project-desc">Student performance prediction: ingestion, feature engineering, model comparison, and logging with scikit-learn.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/mlproject" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Scikit-learn</li>
-              <li>Pandas</li>
-            </ul>
-          </article>
+            <article class="project-card" id="e2e-ml">
+              <h3>End-to-End Machine Learning Project</h3>
+              <p class="project-desc">Student performance prediction: ingestion, feature engineering, model comparison, and logging with scikit-learn.</p>
+              <p class="project-links">
+                <a href="https://github.com/AlluSudharshanRao/mlproject" target="_blank" rel="noopener noreferrer">Code</a>
+              </p>
+              <ul class="project-skills">
+                <li>Scikit-learn</li>
+                <li>Pandas</li>
+              </ul>
+            </article>
 
-          <article class="project-card" id="chatroom">
-            <h3>Chatroom Application</h3>
-            <p class="project-desc">Multi-client TCP chat server in Python with connection management and message routing.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Chat-Application" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Python</li>
-              <li>Networking</li>
-            </ul>
-          </article>
+            <article class="project-card" id="chatroom">
+              <h3>Chatroom Application</h3>
+              <p class="project-desc">Multi-client TCP chat server in Python with connection management and message routing.</p>
+              <p class="project-links">
+                <a href="https://github.com/AlluSudharshanRao/Chat-Application" target="_blank" rel="noopener noreferrer">Code</a>
+              </p>
+              <ul class="project-skills">
+                <li>Python</li>
+                <li>Networking</li>
+              </ul>
+            </article>
 
-          <article class="project-card" id="job-portal">
-            <h3>Job Management Portal</h3>
-            <p class="project-desc">Django job board for seekers and recruiters with applications, email notifications, and admin workflows.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Job-Portal-Management" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Django</li>
-              <li>MySQL</li>
-            </ul>
-          </article>
+            <article class="project-card" id="job-portal">
+              <h3>Job Management Portal</h3>
+              <p class="project-desc">Django job board for seekers and recruiters with applications, email notifications, and admin workflows.</p>
+              <p class="project-links">
+                <a href="https://github.com/AlluSudharshanRao/Job-Portal-Management" target="_blank" rel="noopener noreferrer">Code</a>
+              </p>
+              <ul class="project-skills">
+                <li>Django</li>
+                <li>MySQL</li>
+              </ul>
+            </article>
 
-          <article class="project-card" id="school-website">
-            <h3>School Website</h3>
-            <p class="project-desc">Django school site with admissions and role-based access; Dockerized for deployment.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/School-Website" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Django</li>
-              <li>Docker</li>
-            </ul>
-          </article>
-
-          <article class="project-card" id="whatsapp-analyzer">
-            <h3>WhatsApp Chat Analyzer</h3>
-            <p class="project-desc">Streamlit app for chat-export stats, word clouds, and activity visualizations (pandas, matplotlib, seaborn).</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/WhatsApp_Chat_Analyser" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Streamlit</li>
-              <li>Pandas</li>
-            </ul>
-          </article>
-        </div>
+            <article class="project-card" id="whatsapp-analyzer">
+              <h3>WhatsApp Chat Analyzer</h3>
+              <p class="project-desc">Streamlit app for chat-export stats, word clouds, and activity visualizations (pandas, matplotlib, seaborn).</p>
+              <p class="project-links">
+                <a href="https://github.com/AlluSudharshanRao/WhatsApp_Chat_Analyser" target="_blank" rel="noopener noreferrer">Code</a>
+              </p>
+              <ul class="project-skills">
+                <li>Streamlit</li>
+                <li>Pandas</li>
+              </ul>
+            </article>
+          </div>
+        </details>
       </div>
     </section>
   </main>
@@ -338,7 +382,7 @@
   <footer class="site-footer">
     <div class="container">
       <p>© <span id="year"></span> Sudharshan Rao Allu · ML Systems &amp; Backend Engineer · NYU Tandon</p>
-      <p class="footer-nav"><a href="index.html">Home</a> · <a href="experience.html">Experience</a> · <a href="cv.html">CV</a> · <a href="index.html#contact">Contact</a></p>
+      <p class="footer-nav"><a href="index.html">Home</a> · <a href="projects.html">Projects</a> · <a href="hackathons.html">Hackathons</a> · <a href="blogs.html">Blog</a> · <a href="experience.html">Experience</a> · <a href="cv.html">CV</a> · <a href="index.html#contact">Contact</a></p>
     </div>
   </footer>
 

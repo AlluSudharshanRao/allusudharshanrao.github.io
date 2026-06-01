@@ -119,7 +119,7 @@
           </div>
           <div class="hero-cta">
             <a href="projects.html" class="btn btn-primary">View projects</a>
-            <a href="cv.html" class="btn btn-secondary">CV</a>
+            <a href="cv.html" class="btn btn-secondary">Resume</a>
             <a href="#contact" class="btn btn-secondary">Contact</a>
           </div>
           <div class="hero-tags" aria-hidden="true">
@@ -287,45 +287,7 @@
 
     <div class="section-wave" role="presentation" aria-hidden="true"></div>
 
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title has-icon section-title--hackathons">Hackathons</h2>
-        <p class="section-intro">Full-stack ML and backend builds shipped on deadline. <a href="hackathons.html">View all hackathons →</a></p>
-        <div class="project-cards project-cards-preview">
-          <article class="project-card">
-            <h3><a href="hackathons.html#spark-hack-nyc">FloodIQ (NVIDIA Spark Hack)</a></h3>
-            <p class="project-meta">Apr 2026 · FastAPI + React + LLM</p>
-            <p class="project-desc">Geospatial flood planning with a FastAPI backend, React dashboard, and on-device LLM advisories.</p>
-            <ul class="project-skills">
-              <li>FastAPI</li>
-              <li>React</li>
-            </ul>
-          </article>
-          <article class="project-card">
-            <h3><a href="hackathons.html#nyc-build-with-ai">Mirror (Google @ NYU)</a></h3>
-            <p class="project-meta">Mar 2026 · Gemini + FastAPI</p>
-            <p class="project-desc">Chrome extension stylist with multimodal Gemini and a FastAPI orchestration layer.</p>
-            <ul class="project-skills">
-              <li>FastAPI</li>
-              <li>Multimodal</li>
-            </ul>
-          </article>
-          <article class="project-card">
-            <h3><a href="hackathons.html#cognichip-nyu">ARCH-AI (CogniChip @ NYU)</a></h3>
-            <p class="project-meta">Feb 2026 · RL + LLM</p>
-            <p class="project-desc">Hardware optimization loop combining DQN exploration, LLM reasoning, and Yosys metrics.</p>
-            <ul class="project-skills">
-              <li>RL</li>
-              <li>LLM</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-wave" role="presentation" aria-hidden="true"></div>
-
-    <section class="section">
+    <section class="section" id="selected-projects">
       <div class="container">
         <h2 class="section-title has-icon section-title--projects">Selected projects</h2>
         <p class="section-intro">Selected systems, infrastructure, and backend work. <a href="projects.html">View all projects →</a></p>
@@ -391,6 +353,70 @@
 
     <section class="section alt-bg">
       <div class="container container-narrow">
+        <h2 class="section-title has-icon section-title--blogs">Technical blog</h2>
+        <p class="section-intro">11 posts on LLM serving, training power, and datacenter–grid systems. <a href="blogs.html#start-here">Start here (3 posts)</a> · <a href="blogs.html">View all →</a></p>
+        <div class="project-cards project-cards-preview">
+          <article class="project-card">
+            <h3><a href="blogs/blog-01-llm-inference-prefill-decode.html">How LLM inference actually runs</a></h3>
+            <p class="project-meta">LLM serving · ~4 min</p>
+            <p class="project-desc">Prefill, decode, idle, and why continuous batching stops looking like three clean phases.</p>
+          </article>
+          <article class="project-card">
+            <h3><a href="blogs/blog-02-serving-workload-power-demand.html">From requests to facility load</a></h3>
+            <p class="project-meta">Serving · datacenter power · ~4 min</p>
+            <p class="project-desc">Active requests, PUE, and the signal chain from scheduler to the grid.</p>
+          </article>
+          <article class="project-card">
+            <h3><a href="blogs/blog-08-ai-datacenter-grid-coordination.html">When AI datacenters and the grid share a control loop</a></h3>
+            <p class="project-meta">Grid coordination · ~7 min</p>
+            <p class="project-desc">Power flexibility, voltage limits, and why inference leads the coordination story.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-wave" role="presentation" aria-hidden="true"></div>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title has-icon section-title--hackathons">Hackathons</h2>
+        <p class="section-intro">Full-stack ML and backend builds shipped on deadline. <a href="hackathons.html">View all hackathons →</a></p>
+        <div class="project-cards project-cards-preview">
+          <article class="project-card">
+            <h3><a href="hackathons.html#spark-hack-nyc">FloodIQ (NVIDIA Spark Hack)</a></h3>
+            <p class="project-meta">Apr 2026 · FastAPI + React + LLM</p>
+            <p class="project-desc">Geospatial flood planning with a FastAPI backend, React dashboard, and on-device LLM advisories.</p>
+            <ul class="project-skills">
+              <li>FastAPI</li>
+              <li>React</li>
+            </ul>
+          </article>
+          <article class="project-card">
+            <h3><a href="hackathons.html#nyc-build-with-ai">Mirror (Google @ NYU)</a></h3>
+            <p class="project-meta">Mar 2026 · Gemini + FastAPI</p>
+            <p class="project-desc">Chrome extension stylist with multimodal Gemini and a FastAPI orchestration layer.</p>
+            <ul class="project-skills">
+              <li>FastAPI</li>
+              <li>Multimodal</li>
+            </ul>
+          </article>
+          <article class="project-card">
+            <h3><a href="hackathons.html#cognichip-nyu">ARCH-AI (CogniChip @ NYU)</a></h3>
+            <p class="project-meta">Feb 2026 · RL + LLM</p>
+            <p class="project-desc">Hardware optimization loop combining DQN exploration, LLM reasoning, and Yosys metrics.</p>
+            <ul class="project-skills">
+              <li>RL</li>
+              <li>LLM</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-wave" role="presentation" aria-hidden="true"></div>
+
+    <section class="section alt-bg">
+      <div class="container container-narrow">
         <h2 class="section-title has-icon section-title--publications">Publications</h2>
         <p class="section-intro">Peer-reviewed conference papers. <a href="publications.html">View all →</a></p>
         <div class="project-cards project-cards-preview">
@@ -438,7 +464,7 @@
   <footer class="site-footer">
     <div class="container">
       <p>© <span id="year"></span> Sudharshan Rao Allu · ML Systems &amp; Backend Engineer · NYU Tandon</p>
-      <p class="footer-nav"><a href="projects.html">Projects</a> · <a href="experience.html">Experience</a> · <a href="cv.html">CV</a> · <a href="blogs.html">Blog</a> · <a href="#contact">Contact</a></p>
+      <p class="footer-nav"><a href="index.html">Home</a> · <a href="projects.html">Projects</a> · <a href="hackathons.html">Hackathons</a> · <a href="blogs.html">Blog</a> · <a href="experience.html">Experience</a> · <a href="cv.html">CV</a> · <a href="#contact">Contact</a></p>
     </div>
   </footer>
 
