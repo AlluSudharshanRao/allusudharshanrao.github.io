@@ -110,12 +110,13 @@
     <section class="hero hero-compact hero-with-photo" id="hero">
       <div class="container hero-inner">
         <div class="hero-content">
-          <p class="hero-badge">Open to work · Spring 2027 intern · Full-time June 2027</p>
-          <p class="hero-kicker">ML systems, backend engineering, and research-driven infrastructure</p>
+          <p class="hero-badge">Open to work &middot; Spring 2027 intern &middot; Full-time June 2027</p>
           <h1 class="hero-name">Sudharshan Rao Allu</h1>
-          <p class="hero-tagline">ML Systems &amp; Backend Engineer</p>
-          <p class="hero-subtitle">MS Computer Engineering, NYU Tandon · Grad May 2027</p>
-          <p class="hero-location">New York, NY · ML systems · MLOps · LLM serving &amp; RAG · backend systems</p>
+          <div class="hero-meta">
+            <p class="hero-tagline">ML Systems &amp; Backend Engineer</p>
+            <p class="hero-subtitle">MS Computer Engineering, NYU Tandon &middot; Grad May 2027</p>
+            <p class="hero-location">New York, NY <span>&middot;</span> ML systems <span>&middot;</span> MLOps <span>&middot;</span> LLM serving &amp; RAG <span>&middot;</span> backend systems</p>
+          </div>
           <div class="hero-cta">
             <a href="projects.html" class="btn btn-primary">View projects</a>
             <a href="cv.html" class="btn btn-secondary">CV</a>
@@ -130,27 +131,8 @@
             <span class="hero-tag-pill">PyTorch</span>
             <span class="hero-tag-pill">Docker</span>
           </div>
-          <div class="hero-proof-grid" aria-label="Portfolio highlights">
-            <article class="hero-proof-card">
-              <strong>149 commits</strong>
-              <span>Zulip MLOps capstone with infra, serving, and release flow</span>
-            </article>
-            <article class="hero-proof-card">
-              <strong>2 IEEE papers</strong>
-              <span>Networking and medical imaging research shipped into publications</span>
-            </article>
-            <article class="hero-proof-card">
-              <strong>NYU research</strong>
-              <span>Current work on grid-friendly AI datacenters and systems behavior</span>
-            </article>
-          </div>
         </div>
         <figure class="hero-photo-wrap">
-          <div class="hero-photo-frame" aria-hidden="true">
-            <span>ML systems</span>
-            <span>backend APIs</span>
-            <span>research</span>
-          </div>
           <img
             src="assets/profile-photo.jpeg"
             alt="Sudharshan Rao Allu — ML Systems and Backend Engineer, NYU Tandon School of Engineering"
@@ -167,19 +149,33 @@
     <div class="section-wave" role="presentation" aria-hidden="true"></div>
 
     <section class="section">
-      <div class="container container-narrow">
+      <div class="container container-narrow about-shell">
         <h2 class="section-title has-icon section-title--about">About</h2>
         <div class="about-content">
-          <p class="lead">I'm <strong>Sudharshan Rao Allu</strong>, an MS <strong>Computer Engineering</strong> student at NYU Tandon (<strong>graduating May 2027</strong>). I build <strong>end-to-end ML systems</strong> and <strong>backend services</strong>—from training and experiment tracking through model serving on <strong>Kubernetes</strong>, observability, and <strong>REST APIs</strong> teams can ship and operate.</p>
-          <p>I'm currently a <a href="experience.html#nyu-grid-datacenter-research">Research Intern</a> on grid-friendly AI data centers (GPU workload power, scheduling, and control). I'm <strong>open to work</strong> for <strong>Spring 2027 internships</strong> and <strong>full-time</strong> <strong>ML Systems</strong> and <strong>Backend Engineering</strong> roles starting <strong>June 2027</strong>.</p>
-          <p><strong>What I build</strong></p>
-          <ul class="pub-list">
-            <li><strong>ML systems (end-to-end):</strong> data → training → registry (<strong>MLflow</strong>, DVC) → inference → deploy &amp; monitor; MLOps capstone on Chameleon with retrain automation and canary/prod promotion on <strong>k3s</strong> (<a href="projects.html#multi-tone-zulip">Multi-Tone Zulip</a>).</li>
-            <li><strong>LLM serving:</strong> containerized <strong>RAG</strong> apps (hybrid retrieval, citations, <a href="projects.html#rag">Smart RAG</a>), LoRA fine-tuning, and multimodal VLM pipelines (<a href="projects.html#pixels-to-predictions">Pixels to Predictions</a>).</li>
-            <li><strong>Backends:</strong> <strong>FastAPI</strong> / <strong>Django</strong>, Docker, auth, caching, rate limits, and tested APIs—plus hackathon stacks shipped on short timelines (<a href="hackathons.html">hackathons</a>).</li>
-            <li><strong>Platforms:</strong> Terraform, Ansible, Helm, Prometheus/Grafana for reproducible ML infrastructure (<a href="projects.html#mlops-devops">platform repo</a>).</li>
-            <li><strong>Writing:</strong> <a href="blogs.html">technical blog</a> on ML systems, backend engineering, LLM serving, training infrastructure, and related systems topics.</li>
-          </ul>
+          <div class="about-refined">
+            <p class="lead">I&apos;m <strong>Sudharshan Rao Allu</strong>, an MS <strong>Computer Engineering</strong> student at NYU Tandon (<strong>graduating May 2027</strong>). I build <strong>end-to-end ML systems</strong> and <strong>backend services</strong> spanning training, tracking, model serving, observability, and APIs teams can operate.</p>
+            <p>I&apos;m currently a <a href="experience.html#nyu-grid-datacenter-research">Research Intern</a> working on grid-friendly AI datacenters, and I&apos;m seeking <strong>Spring 2027 internships</strong> and <strong>full-time ML Systems / Backend roles</strong> starting <strong>June 2027</strong>.</p>
+            <h3 class="about-subhead">What I build</h3>
+            <div class="about-capabilities">
+              <article class="about-capability">
+                <h4>ML systems</h4>
+                <p>Training, tracking, model registry, inference, and deployment automation with <strong>MLflow</strong>, DVC, and <strong>k3s</strong>, including staged rollout and retraining workflows in <a href="projects.html#multi-tone-zulip">Multi-Tone Zulip</a>.</p>
+              </article>
+              <article class="about-capability">
+                <h4>LLM serving</h4>
+                <p>Containerized <strong>RAG</strong> workflows, hybrid retrieval, LoRA fine-tuning, and multimodal pipelines such as <a href="projects.html#pixels-to-predictions">Pixels to Predictions</a>.</p>
+              </article>
+              <article class="about-capability">
+                <h4>Backends</h4>
+                <p><strong>FastAPI</strong> and Django services with auth, caching, rate limits, and tested APIs, plus fast-moving product builds from <a href="hackathons.html">hackathons</a>.</p>
+              </article>
+              <article class="about-capability">
+                <h4>Platforms</h4>
+                <p>Terraform, Ansible, Helm, Prometheus, and Grafana for reproducible ML infrastructure and operational visibility in the <a href="projects.html#mlops-devops">platform repo</a>.</p>
+              </article>
+            </div>
+            <p class="about-writing">I also keep a <a href="blogs.html">technical blog</a> on ML systems, backend engineering, LLM serving, training infrastructure, and related systems topics.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -189,27 +185,31 @@
     <section class="section alt-bg" id="focus">
       <div class="container container-narrow">
         <h2 class="section-title has-icon section-title--projects">Focus areas</h2>
-        <p class="section-intro">Open to <strong>ML Systems Engineer</strong>, <strong>MLOps Engineer</strong>, <strong>ML Engineer</strong> (serving &amp; infrastructure), and <strong>Backend Engineer</strong> roles — <strong>Spring 2027 internships</strong> and <strong>full-time from June 2027</strong>.</p>
+        <p class="section-intro focus-intro">Open to <strong>ML Systems Engineer</strong>, <strong>MLOps Engineer</strong>, <strong>ML Engineer</strong> (serving &amp; infrastructure), and <strong>Backend Engineer</strong> roles for <strong>Spring 2027 internships</strong> and <strong>full-time from June 2027</strong>.</p>
         <div class="focus-grid">
           <article class="focus-card">
+            <p class="focus-kicker">Systems pipeline</p>
             <h3>ML systems (end-to-end)</h3>
-            <p>Data pipelines, training, experiment tracking (<strong>MLflow</strong>, DVC), model registry, inference services, deploy &amp; monitor on <strong>Kubernetes</strong>.</p>
-            <p class="focus-links"><a href="projects.html#multi-tone-zulip">MLOps capstone</a> · <a href="projects.html">all projects</a></p>
+            <p>Data pipelines, training, experiment tracking (<strong>MLflow</strong>, DVC), model registry, inference services, and deploy/monitor workflows on <strong>Kubernetes</strong>.</p>
+            <p class="focus-links"><a href="projects.html#multi-tone-zulip">MLOps capstone</a> <span>&middot;</span> <a href="projects.html">all projects</a></p>
           </article>
           <article class="focus-card">
+            <p class="focus-kicker">Retrieval and inference</p>
             <h3>LLM serving &amp; applications</h3>
-            <p>Containerized <strong>RAG</strong> apps, hybrid retrieval, citations, LoRA fine-tuning, multimodal VLMs, and <strong>LLM inference</strong> (prefill/decode, batching).</p>
-            <p class="focus-links"><a href="projects.html#pixels-to-predictions">Pixels to Predictions</a> · <a href="blogs/blog-01-llm-inference-prefill-decode.html">LLM inference blog</a></p>
+            <p>Containerized <strong>RAG</strong> apps, hybrid retrieval, citations, LoRA fine-tuning, multimodal VLMs, and <strong>LLM inference</strong> fundamentals like prefill/decode and batching.</p>
+            <p class="focus-links"><a href="projects.html#pixels-to-predictions">Pixels to Predictions</a> <span>&middot;</span> <a href="blogs/blog-01-llm-inference-prefill-decode.html">LLM inference blog</a></p>
           </article>
           <article class="focus-card">
+            <p class="focus-kicker">APIs and services</p>
             <h3>Production backends</h3>
-            <p><strong>FastAPI</strong> / <strong>Django</strong>, Docker, auth, caching, rate limits, tested REST APIs — shipped under hackathon deadlines.</p>
-            <p class="focus-links"><a href="hackathons.html">hackathon builds</a> · <a href="projects.html#ambient-code">Ambient Code</a></p>
+            <p><strong>FastAPI</strong> / <strong>Django</strong>, Docker, auth, caching, rate limits, and tested REST APIs shipped under fast-moving product and hackathon timelines.</p>
+            <p class="focus-links"><a href="hackathons.html">hackathon builds</a> <span>&middot;</span> <a href="projects.html#ambient-code">Ambient Code</a></p>
           </article>
           <article class="focus-card">
+            <p class="focus-kicker">Infra and systems behavior</p>
             <h3>ML infrastructure &amp; research</h3>
-            <p>Terraform, Ansible, Helm, Prometheus/Grafana; GPU workload power, distributed training, and AI datacenter–grid coordination.</p>
-            <p class="focus-links"><a href="experience.html#nyu-grid-datacenter-research">research</a> · <a href="blogs.html">technical blog</a></p>
+            <p>Terraform, Ansible, Helm, and Prometheus/Grafana, alongside GPU workload power, distributed training, and AI datacenter-grid coordination research.</p>
+            <p class="focus-links"><a href="experience.html#nyu-grid-datacenter-research">research</a> <span>&middot;</span> <a href="blogs.html">technical blog</a></p>
           </article>
         </div>
       </div>
@@ -220,43 +220,67 @@
     <section class="section">
       <div class="container container-narrow">
         <h2 class="section-title has-icon section-title--updates">Updates</h2>
-        <div class="updates-table-wrap">
-          <table class="updates-table">
-            <tbody>
-              <tr>
-                <td class="updates-date">May 2026</td>
-                <td>Started <strong>Research Intern</strong> at NYU Tandon ECE — grid-friendly AI data center co-design with <strong>Wenqi Cui</strong> and <strong>Brandon Reagen</strong> (<a href="experience.html#nyu-grid-datacenter-research">details</a>)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">May 2026</td>
-                <td><strong>Open to work</strong> — Spring 2027 internships &amp; full-time ML Systems / Backend from June 2027 (grad May 2027)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Apr 2026</td>
-                <td>Spark Hack Series — New York (NVIDIA): built <strong>FloodIQ</strong> (<a href="hackathons.html#spark-hack-nyc">details</a>)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Mar 2026</td>
-                <td>NYC Build With AI Hackathon <strong>(Google)</strong> @ NYU Tandon: built <strong>Mirror</strong> (<a href="hackathons.html#nyc-build-with-ai">details</a>)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Feb 2026</td>
-                <td>CogniChip Hackathon at NYU: built <strong>ARCH-AI</strong> (<a href="hackathons.html#cognichip-nyu">details</a>)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Sep 2025</td>
-                <td>Graduate Research Contributor at NYU Secure Systems Lab (Lind, WebAssembly / RustPOSIX)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Sep 2025</td>
-                <td>IT Co-Head, HESS at NYU (<a href="experience.html#hess-it-cohead">details</a>)</td>
-              </tr>
-              <tr>
-                <td class="updates-date">Aug 2025</td>
-                <td>Started MS in Computer Engineering at NYU Tandon</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="updates-list" aria-label="Recent updates">
+          <article class="update-item update-item--featured">
+            <p class="update-date">May 2026</p>
+            <div class="update-body">
+              <h3>Started Research Intern at NYU Tandon ECE</h3>
+              <p>Working on grid-friendly AI data center co-design with <strong>Wenqi Cui</strong> and <strong>Brandon Reagen</strong>.</p>
+              <p class="update-links"><a href="experience.html#nyu-grid-datacenter-research">details</a></p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">May 2026</p>
+            <div class="update-body">
+              <h3>Open to work</h3>
+              <p>Seeking <strong>Spring 2027 internships</strong> and <strong>full-time ML Systems / Backend roles</strong> from <strong>June 2027</strong> (grad May 2027).</p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Apr 2026</p>
+            <div class="update-body">
+              <h3>Spark Hack Series, New York (NVIDIA)</h3>
+              <p>Built <strong>FloodIQ</strong>.</p>
+              <p class="update-links"><a href="hackathons.html#spark-hack-nyc">details</a></p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Mar 2026</p>
+            <div class="update-body">
+              <h3>NYC Build With AI Hackathon (Google) at NYU Tandon</h3>
+              <p>Built <strong>Mirror</strong>.</p>
+              <p class="update-links"><a href="hackathons.html#nyc-build-with-ai">details</a></p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Feb 2026</p>
+            <div class="update-body">
+              <h3>CogniChip Hackathon at NYU</h3>
+              <p>Built <strong>ARCH-AI</strong>.</p>
+              <p class="update-links"><a href="hackathons.html#cognichip-nyu">details</a></p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Sep 2025</p>
+            <div class="update-body">
+              <h3>Graduate Research Contributor</h3>
+              <p>Joined the NYU Secure Systems Lab, working on Lind, WebAssembly, and RustPOSIX.</p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Sep 2025</p>
+            <div class="update-body">
+              <h3>IT Co-Head, HESS at NYU</h3>
+              <p>Supporting student organization operations and technical coordination.</p>
+              <p class="update-links"><a href="experience.html#hess-it-cohead">details</a></p>
+            </div>
+          </article>
+          <article class="update-item">
+            <p class="update-date">Aug 2025</p>
+            <div class="update-body">
+              <h3>Started MS in Computer Engineering at NYU Tandon</h3>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -304,7 +328,7 @@
     <section class="section">
       <div class="container">
         <h2 class="section-title has-icon section-title--projects">Selected projects</h2>
-        <p class="section-intro">End-to-end ML systems and backend services. <a href="projects.html">View all projects →</a></p>
+        <p class="section-intro">Selected systems, infrastructure, and backend work. <a href="projects.html">View all projects →</a></p>
         <div class="project-cards project-cards-preview">
           <article class="project-card project-card--spotlight">
             <p class="project-eyebrow">Flagship MLOps platform</p>
