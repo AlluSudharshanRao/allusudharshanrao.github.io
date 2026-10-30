@@ -129,24 +129,22 @@
               <li>GitHub Actions</li>
             </ul>
           </article>
-
-          <article class="project-card featured" id="ambient-code">
-            <p class="project-eyebrow">Developer tooling</p>
-            <h3>Ambient Code</h3>
-            <p class="project-meta">Developer tooling · VS Code extension + Python services</p>
-            <p class="project-desc">Observes editor and git activity, builds a persistent codebase model (symbols, churn), and surfaces context-aware LLM findings inside VS Code.</p>
-            <p class="project-proof">Structured as editor collection + context engine + insight engine with dedicated tests and docs.</p>
+          <article class="project-card featured" id="rag">
+            <h3>RAG-Powered Document Assistant (Smart RAG)</h3>
+            <p class="project-meta">Sep 2025 – Dec 2025</p>
+            <p class="project-desc">Containerized retrieval stack over PDF/DOCX/TXT/MD: ChromaDB, hybrid retrieval (semantic + BM25), citations, and multi-turn chat. <strong>Streamlit</strong> demo UI; core logic is Python services + Docker (not a separate public FastAPI deployment).</p>
+            <p class="project-proof">Hybrid retrieval and Dockerized pipeline; benchmarked with RAGAS-style faithfulness and context precision targets.</p>
             <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Ambient-Code" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="https://github.com/AlluSudharshanRao/smart-rag-assistant" target="_blank" rel="noopener noreferrer">Code</a>
+              <a href="https://smart-rag-assistant.streamlit.app/" target="_blank" rel="noopener noreferrer">Live demo</a>
             </p>
             <ul class="project-skills">
-              <li>VS Code Extension</li>
-              <li>TypeScript</li>
-              <li>Python</li>
-              <li>tree-sitter</li>
+              <li>LangChain</li>
+              <li>RAG</li>
+              <li>ChromaDB</li>
+              <li>Docker</li>
             </ul>
           </article>
-
           <article class="project-card featured" id="traffic-engineering">
             <p class="project-eyebrow">Research systems</p>
             <h3>Learning-Augmented Robust Traffic Engineering</h3>
@@ -164,24 +162,6 @@
               <li>SDN</li>
             </ul>
           </article>
-
-          <article class="project-card featured" id="pixels-to-predictions">
-            <p class="project-eyebrow">Multimodal modeling</p>
-            <h3>Pixels to Predictions (DL Vision Challenge)</h3>
-            <p class="project-meta">Multimodal VLM · documented experiment runs</p>
-            <p class="project-desc"><strong>SmolVLM-500M</strong> LoRA under a 5M-parameter budget: binary choice scoring and validation-calibrated ensembles. Best ensemble accuracy <strong>0.938</strong>; per-run notebooks, metrics, and ablation ledgers in repo.</p>
-            <p class="project-proof">Ablation-led experimentation with preserved run notes, metrics, and submission artifacts.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/Pixels-to-Predictions" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>SmolVLM</li>
-              <li>LoRA</li>
-              <li>PyTorch</li>
-              <li>Ensembling</li>
-            </ul>
-          </article>
-
           <article class="project-card featured" id="mlops">
             <p class="project-eyebrow">Applied ML platform</p>
             <h3>Real-Time Recommendation System with MLOps</h3>
@@ -198,6 +178,42 @@
               <li>Docker</li>
             </ul>
           </article>
+          <article class="project-card featured" id="pixels-to-predictions">
+            <p class="project-eyebrow">Multimodal modeling</p>
+            <h3>Pixels to Predictions (DL Vision Challenge)</h3>
+            <p class="project-meta">Multimodal VLM · documented experiment runs</p>
+            <p class="project-desc"><strong>SmolVLM-500M</strong> LoRA under a 5M-parameter budget: binary choice scoring and validation-calibrated ensembles. Best ensemble accuracy <strong>0.938</strong>; per-run notebooks, metrics, and ablation ledgers in repo.</p>
+            <p class="project-proof">Ablation-led experimentation with preserved run notes, metrics, and submission artifacts.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Pixels-to-Predictions" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>SmolVLM</li>
+              <li>LoRA</li>
+              <li>PyTorch</li>
+              <li>Ensembling</li>
+            </ul>
+          </article>
+          <article class="project-card featured" id="ambient-code">
+            <p class="project-eyebrow">Developer tooling</p>
+            <h3>Ambient Code</h3>
+            <p class="project-meta">Developer tooling · VS Code extension + Python services</p>
+            <p class="project-desc">Observes editor and git activity, builds a persistent codebase model (symbols, churn), and surfaces context-aware LLM findings inside VS Code.</p>
+            <p class="project-proof">Structured as editor collection + context engine + insight engine with dedicated tests and docs.</p>
+            <p class="project-links">
+              <a href="https://github.com/AlluSudharshanRao/Ambient-Code" target="_blank" rel="noopener noreferrer">Code</a>
+            </p>
+            <ul class="project-skills">
+              <li>VS Code Extension</li>
+              <li>TypeScript</li>
+              <li>Python</li>
+              <li>tree-sitter</li>
+            </ul>
+          </article>
+
+
+
+
 
           <article class="project-card" id="llm-finetune-serving">
             <h3>LLM Fine-Tuning &amp; Serving Workflow</h3>
@@ -215,36 +231,7 @@
             </ul>
           </article>
 
-          <article class="project-card" id="svg-generation">
-            <h3>SVG Generation (Qwen2 LoRA)</h3>
-            <p class="project-meta">Fine-tuning · Hugging Face</p>
-            <p class="project-desc">LoRA pipeline for <strong>SVG code generation</strong> with Qwen2—training/inference notebooks, tokenizer config, and reproducible weight artifacts.</p>
-            <p class="project-proof">Public repo with training notebooks, tokenizer setup, and exportable LoRA weights.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/SVG_Generation" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>Transformers</li>
-              <li>LoRA</li>
-              <li>Jupyter</li>
-            </ul>
-          </article>
 
-          <article class="project-card" id="rag">
-            <h3>RAG-Powered Document Assistant (Smart RAG)</h3>
-            <p class="project-meta">Sep 2025 – Dec 2025</p>
-            <p class="project-desc">Containerized retrieval stack over PDF/DOCX/TXT/MD: ChromaDB, hybrid retrieval (semantic + BM25), citations, and multi-turn chat. <strong>Streamlit</strong> demo UI; core logic is Python services + Docker (not a separate public FastAPI deployment).</p>
-            <p class="project-proof">Hybrid retrieval and Dockerized pipeline; benchmarked with RAGAS-style faithfulness and context precision targets.</p>
-            <p class="project-links">
-              <a href="https://github.com/AlluSudharshanRao/smart-rag-assistant" target="_blank" rel="noopener noreferrer">Code</a>
-            </p>
-            <ul class="project-skills">
-              <li>LangChain</li>
-              <li>RAG</li>
-              <li>ChromaDB</li>
-              <li>Docker</li>
-            </ul>
-          </article>
         </div>
 
         <div class="project-cards">
@@ -348,29 +335,7 @@
               </ul>
             </article>
 
-            <article class="project-card" id="job-portal">
-              <h3>Job Management Portal</h3>
-              <p class="project-desc">Django job board for seekers and recruiters with applications, email notifications, and admin workflows.</p>
-              <p class="project-links">
-                <a href="https://github.com/AlluSudharshanRao/Job-Portal-Management" target="_blank" rel="noopener noreferrer">Code</a>
-              </p>
-              <ul class="project-skills">
-                <li>Django</li>
-                <li>MySQL</li>
-              </ul>
-            </article>
 
-            <article class="project-card" id="whatsapp-analyzer">
-              <h3>WhatsApp Chat Analyzer</h3>
-              <p class="project-desc">Streamlit app for chat-export stats, word clouds, and activity visualizations (pandas, matplotlib, seaborn).</p>
-              <p class="project-links">
-                <a href="https://github.com/AlluSudharshanRao/WhatsApp_Chat_Analyser" target="_blank" rel="noopener noreferrer">Code</a>
-              </p>
-              <ul class="project-skills">
-                <li>Streamlit</li>
-                <li>Pandas</li>
-              </ul>
-            </article>
           </div>
         </details>
       </div>
